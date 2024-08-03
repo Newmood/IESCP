@@ -1,21 +1,91 @@
 <!-- PAGE CONTENTS:
  Basic layout common to all pages after login/register 
  Header : navbar : home, profile/dashboard, campaigns list, browse page, analytics page, edit profile, notifications, logout button
- footer : IESCP platform info, copyright, social icons, buncha TnC and policy pages-->
-
- <!DOCTYPE html>
-
- <html>
+-->
+<!DOCTYPE html>
+<html>
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-        <meta name="description" content="">
-        <title></title>
+        <!-- BOOTSTRAP CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/layout.css') }}">
+
+        {% if title %}
+            <title> IESCP - {{ title }} </title>
+        {% else %}
+            <title> IESCP </title>
+        {% endif %}
+        
     </head>
     <body>
+        <header class="site-header">
+            <nav class="navbar navbar-expand-md fixed-top" data-bs-theme="dark"> <!--fixed-top-->
+                <div class="container">
+                    <a class="navbar-brand fs-3" href="#" >IESCP</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav nav-underline ms-auto mb-2 mb-lg-0 gap-2">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="#"> Home </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"> Dashboard </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"> Campaigns </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"> Browse </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"> Analytics </a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-2">
+                            <li class="nav-item">
+                                <a class="btn btn-outline-light" href="#"> Profile </a>
+                            </li>
+                            <!-- <li class="nav-item">
+                                <a class="btn btn-outline-light" href="#"> Notifications </a>
+                            </li> -->
+                            <li class="nav-item">
+                                <a class="btn btn-outline-light" href="#"> Logout </a>
+                            </li>
+                        </ul>
+                    </div>
+            </nav>
+            </div>
+        </header>
+        <main role="main" class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    {% block content %} {% endblock %}
+                </div>
+            
+                <div class="col-md-3">
+                    <div class="content-section sticky-top">
+                        <h3> Sidebar </h3>
+                        <p class='text-muted'> To decide what to put here
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-light">Latest Posts</li>
+                            <li class="list-group-item list-group-item-light"> Check performance analytics </li>
+                            <li class="list-group-item list-group-item-light"> Browse creators/sponsors </li>
+                        </ul>
+                    </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
         
+
+
+        <!-- BOOTSTRAP JS -->
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
         
-        <script src="" async defer></script>
     </body>
- </html>
+</html>

@@ -1,3 +1,26 @@
 <!-- PAGE CONTENTS:
  Serves as home page after login/register for both creators and sponsors
  contains public ads, browse creators carousel, browser sponsors carousel -->
+
+{% extends "layout.html" %}
+{% block content %}
+
+        {% for post in ads_posts %}
+            <article class="media content-section">
+                <div class="media-body">
+                    <div class="article-metadata"> 
+                        <a class="mr-2" href="#"> {{ post.author }}</a>
+                        <small class="text-muted"> {{ post.date_posted }}</small>
+                    </div>
+                    <h2><a class="article-title" href="#"> {{ post.title }} </a></h2>
+                    <p class="article-content"> {{ post.description }} </p>
+                    <p class="article-content"> 
+                        <span> Budget : {{ post.budget }}</span>
+                        <span> Industry : {{ post.industry }} </span>
+                        <span> End Date : {{ post.end_date }} </span> 
+                    </p>
+                </div>
+            </article>
+        {% endfor %}
+
+{% endblock content %}
