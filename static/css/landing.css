@@ -12,7 +12,7 @@
 .landing-text{
     z-index: 10000;
     position: relative;
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(220, 220, 220, 0.4);
     backdrop-filter: blur(6px);
     border-radius: 10px;
 }
