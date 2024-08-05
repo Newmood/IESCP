@@ -1,8 +1,11 @@
 from flask import Flask
-from flask import render_template, url_for, redirect, request
+from flask import render_template, url_for, flash, redirect, request
 import requests as rq
+from forms import LoginForm
 
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = '7cf5fbfb549d204db232cebd4500fdb3'
 
 ads_posts= [
      {
@@ -45,6 +48,13 @@ def landing():
 @app.route("/home")
 def home():
     return render_template('index.html', title="Home" ,ads_posts= ads_posts)
+
+@app.route("/login", methods =['GET','POST'])
+def login():
+     form = LoginForm()
+     if form.validate_on_submit():
+          return redirect(url_for('home'))
+     return render_template('login.html', title="Login", form=form)
 
 if __name__ == "__main__":
         app.run(debug=True)
