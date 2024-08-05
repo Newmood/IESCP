@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template, url_for, flash, redirect, request
 import requests as rq
-from forms import LoginForm
+from forms import *
 
 app = Flask(__name__)
 
@@ -53,7 +53,10 @@ def home():
 def login():
      form = LoginForm()
      if form.validate_on_submit():
-          return redirect(url_for('home'))
+          if form.email.data == "admin@admin.com":
+               return redirect(url_for('home'))
+          else:
+               flash('Login unsuccessful. Please check credentials and try again.','danger')
      return render_template('login.html', title="Login", form=form)
 
 if __name__ == "__main__":

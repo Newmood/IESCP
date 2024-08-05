@@ -11,10 +11,8 @@ and a forgot password button  -->
 {% block content %}
     <img src="{{ url_for('static', filename = 'images/landing-2.jpeg') }}" class="landing-img">
 
-<!-- inside form : {{ form.hidden_tag() }} -->
-
     <div class="login-box">
-        <form method="POST" action="">
+        <form method="POST" action="{{ url_for('login') }}">
             {{ form.hidden_tag() }}
             <h1 class="h3 mb-3 fw-normal">Login</h1>
             <hr>
@@ -53,13 +51,13 @@ and a forgot password button  -->
                 {{ form.submit(class="btn btn-outline-dark w-100 py-2") }}
             </div>
             <small class="text-muted ml-2">
-                <a href="#">Forgot Password?</a>
+                <a href="#">Forgot password?</a>
             </small>
         </form>
         <hr>
         <div>
             <small>
-                Need An Account? <a class="ml-2" href="#">Sign Up Now</a>
+                Don't have an account? <a class="ml-2" href="#">Register now!</a>
             </small>
         </div>
     </div>
