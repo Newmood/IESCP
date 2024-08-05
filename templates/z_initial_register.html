@@ -1,0 +1,453 @@
+{% extends "prelayout.html" %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/register.css')}}" >
+    
+{%endblock head %}
+
+{% block content %}
+<img src="{{ url_for('static', filename = 'images/landing-2.jpeg') }}" class="landing-img">
+
+<div class="register-box container mt-5 mb-5">
+    <div class="text-center mb-4 ">
+        <h1 class="mb-4">Register as</h1>
+        <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="pills-creator-tab" data-bs-toggle="pill" href="#pills-creator" role="tab" aria-controls="pills-creator" aria-selected="true">Influencer</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pills-sponsor-tab" data-bs-toggle="pill" href="#pills-sponsor" role="tab" aria-controls="pills-sponsor" aria-selected="false">Sponsor</a>
+            </li>
+        </ul>
+    </div>
+    <hr>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-creator" role="tabpanel" aria-labelledby="pills-creator-tab">
+            <form method="POST" action="{{ url_for('register') }}">
+                {{ creator_form.hidden_tag() }}
+                
+                <div class="row mb-3">
+                    <div class="form-group col-md-6">
+                        {{ creator_form.firstname.label (class='form-label') }}
+                        {% if creator_form.firstname.errors %}
+                            {{ creator_form.firstname(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in creator_form.firstname.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ creator_form.firstname(class="form-control") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ creator_form.lastname.label (class='form-label') }}
+                        {% if creator_form.lastname.errors %}
+                            {{ creator_form.lastname(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in creator_form.lastname.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ creator_form.lastname(class="form-control") }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group d-flex align-items-center mb-3">
+                    <div class="col-md-2"> {{ creator_form.username.label (class='form-label') }} </div>
+                    <div class="col-md-auto d-flex flex-row">
+                        {% if creator_form.username.errors %}
+                            {{ creator_form.username(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in creator_form.username.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ creator_form.username(class="form-control", aria_describedby="usernameHelp") }}
+                            <span id="usernameHelp" class="form-text"> Usernames must be 4-16 characters long.</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                <div class="form-group col-md-6">
+                    {{ creator_form.email.label (class='form-label') }}
+                    {% if creator_form.email.errors %}
+                        {{ creator_form.email(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in creator_form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ creator_form.email(class="form-control ") }}
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ creator_form.phone_number.label (class='form-label') }}
+                    {% if creator_form.phone_number.errors %}
+                        {{ creator_form.phone_number(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in creator_form.phone_number.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ creator_form.phone_number(class="form-control ") }}
+                    {% endif %}
+                </div>
+                </div>
+
+                <hr>
+                <div class="row mb-3">
+                <div class="form-group col-md-4">
+                    {{ creator_form.social_1.label (class='form-label') }}
+                    {% if creator_form.social_1.errors %}
+                        {{ creator_form.social_1(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in creator_form.social_1.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ creator_form.social_1(class="form-control ") }}
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-4">
+                    {{ creator_form.social_2.label (class='form-label') }}
+                    {% if creator_form.social_2.errors %}
+                        {{ creator_form.social_2(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in creator_form.social_2.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ creator_form.social_2(class="form-control ") }}
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-4">
+                    {{ creator_form.social_3.label (class='form-label') }}
+                    {% if creator_form.social_3.errors %}
+                        {{ creator_form.social_3(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in creator_form.social_3.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ creator_form.social_3(class="form-control ") }}
+                    {% endif %}
+                </div>
+                </div>
+
+                <div class="row mb-3">
+                <div class="form-group col-md-6">
+                    {{ creator_form.profile_pic.label (class='form-label') }}
+                    {% if creator_form.profile_pic.errors %}
+                        {{ creator_form.profile_pic(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in creator_form.profile_pic.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ creator_form.profile_pic(class="form-control ") }}
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ creator_form.category.label (class='form-label') }}
+                    {% if creator_form.category.errors %}
+                        {{ creator_form.category(class="form-select  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in creator_form.category.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ creator_form.category(class="form-select ") }}
+                    {% endif %}
+                </div>
+                </div>
+                
+                <div class="row mb-3">
+                <div class="form-group col-md-6">
+                    {{ creator_form.location.label (class='form-label') }}
+                    {% if creator_form.location.errors %}
+                        {{ creator_form.location(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in creator_form.location.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ creator_form.location(class="form-control ") }}
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ creator_form.date_of_birth.label (class='form-label') }}
+                    {% if creator_form.date_of_birth.errors %}
+                        {{ creator_form.date_of_birth(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in creator_form.date_of_birth.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ creator_form.date_of_birth(class="form-control ") }}
+                    {% endif %}
+                </div>
+                </div>
+
+                <div class="form-group">
+                    {{ creator_form.biodata.label (class='form-label') }}
+                    {% if creator_form.biodata.errors %}
+                        {{ creator_form.biodata(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in creator_form.biodata.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ creator_form.biodata(class="form-control ") }}
+                    {% endif %}
+                </div>
+                
+                <hr>
+
+                <div class="row mb-3">
+                <div class="form-group col-md-6">
+                    {{ creator_form.password.label (class='form-label') }}
+                    {% if creator_form.password.errors %}
+                        {{ creator_form.password(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in creator_form.password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ creator_form.password(class="form-control ") }}
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ creator_form.confirm_password.label (class='form-label') }}
+                    {% if creator_form.confirm_password.errors %}
+                        {{ creator_form.confirm_password(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in creator_form.confirm_password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ creator_form.confirm_password(class="form-control ") }}
+                    {% endif %}
+                </div>
+               </div>
+
+                <div class="pt-3 d-grid gap-2 col-2 mx-auto form-group">
+                    {{ creator_form.submit(class="btn btn-outline-dark  py-2") }}
+                </div>
+                <hr>
+            </form>
+        </div>
+
+
+        <div class="tab-pane fade" id="pills-sponsor" role="tabpanel" aria-labelledby="pills-sponsor-tab">
+            <form method="POST" action="{{ url_for('register') }}">
+                {{ sponsor_form.hidden_tag() }}
+
+                <div class="row mb-3">
+                    <div class="form-group col-md-6">
+                        {{ sponsor_form.firstname.label (class='form-label') }}
+                        {% if sponsor_form.firstname.errors %}
+                            {{ sponsor_form.firstname(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in sponsor_form.firstname.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ sponsor_form.firstname(class="form-control") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ sponsor_form.lastname.label (class='form-label') }}
+                        {% if sponsor_form.lastname.errors %}
+                            {{ sponsor_form.lastname(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in sponsor_form.lastname.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ sponsor_form.lastname(class="form-control") }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group d-flex align-items-center mb-3">
+                    <div class="col-md-2"> {{ sponsor_form.username.label (class='form-label') }} </div>
+                    <div class="col-md-auto d-flex flex-row">
+                        {% if sponsor_form.username.errors %}
+                            {{ sponsor_form.username(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in sponsor_form.username.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ sponsor_form.username(class="form-control", aria_describedby="usernameHelp") }}
+                            <span id="usernameHelp" class="form-text"> Usernames must be 4-16 characters long.</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="form-group col-md-6">
+                        {{ sponsor_form.email.label (class='form-label') }}
+                        {% if sponsor_form.email.errors %}
+                            {{ sponsor_form.email(class="form-control  is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in sponsor_form.email.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ sponsor_form.email(class="form-control ") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ sponsor_form.phone_number.label (class='form-label') }}
+                        {% if sponsor_form.phone_number.errors %}
+                            {{ sponsor_form.phone_number(class="form-control  is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in sponsor_form.phone_number.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ sponsor_form.phone_number(class="form-control ") }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="form-group col-md-6">
+                        {{ sponsor_form.company_name.label (class='form-label') }}
+                        {% if sponsor_form.company_name.errors %}
+                            {{ sponsor_form.company_name(class="form-control  is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in sponsor_form.company_name.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ sponsor_form.company_name(class="form-control ") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ sponsor_form.profile_pic.label (class='form-label') }}
+                        {% if sponsor_form.profile_pic.errors %}
+                            {{ sponsor_form.profile_pic(class="form-control  is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in sponsor_form.profile_pic.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ sponsor_form.profile_pic(class="form-control ") }}
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="form-group col-md-6">
+                        {{ sponsor_form.industry.label (class='form-label') }}
+                        {% if sponsor_form.industry.errors %}
+                            {{ sponsor_form.industry(class="form-control  is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in sponsor_form.industry.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ sponsor_form.industry(class="form-control ") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ sponsor_form.website.label (class='form-label') }}
+                        {% if sponsor_form.website.errors %}
+                            {{ sponsor_form.website(class="form-control  is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in sponsor_form.website.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ sponsor_form.website(class="form-control ") }}
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    {{ sponsor_form.company_address.label (class='form-label') }}
+                    {% if sponsor_form.company_address.errors %}
+                        {{ sponsor_form.company_address(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in sponsor_form.company_address.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ sponsor_form.company_address(class="form-control ") }}
+                    {% endif %}
+                </div>
+
+                <div class="row mb-3">
+                    <div class="form-group col-md-6">
+                        {{ sponsor_form.password.label (class='form-label') }}
+                        {% if sponsor_form.password.errors %}
+                            {{ sponsor_form.password(class="form-control  is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in sponsor_form.password.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ sponsor_form.password(class="form-control ") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ sponsor_form.confirm_password.label (class='form-label') }}
+                        {% if sponsor_form.confirm_password.errors %}
+                            {{ sponsor_form.confirm_password(class="form-control  is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in sponsor_form.confirm_password.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ sponsor_form.confirm_password(class="form-control ") }}
+                        {% endif %}
+                    </div>
+                </div>
+    
+                <div class="pt-3 d-grid gap-2 col-2 mx-auto form-group">
+                    {{ sponsor_form.submit(class="btn btn-outline-dark  py-2") }}
+                </div>
+
+                <hr>
+            </form>
+        </div>
+    </div>
+    <div>
+        <p> Already have an account? <a class="ml-2" href="{{ url_for('login') }}">Login now! </a></p>
+    </div>
+</div>
+
+
+
+
+{% endblock content%}

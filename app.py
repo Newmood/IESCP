@@ -49,6 +49,24 @@ def landing():
 def home():
     return render_template('index.html', title="Home" ,ads_posts= ads_posts)
 
+@app.route("/creator-register", methods=['GET','POST'])
+def creator_register():
+     creator_form = CreatorRegistrationForm()
+     if creator_form.validate_on_submit():
+          flash("Creator account has been created. Please login to continue.",'success')
+          return redirect(url_for('login'))
+     return render_template('creator/creator_register.html', title="Creator Register", creator_form=creator_form)
+
+@app.route("/sponsor-register", methods=['GET','POST'])
+def sponsor_register():
+     sponsor_form = SponsorRegistrationForm()
+     if sponsor_form.validate_on_submit():
+          flash("Sponsor account has been created. Please login to continue.",'success')
+          return redirect(url_for('login'))
+     return render_template('sponsor/sponsor_register.html', title="Sponsor Register", sponsor_form=sponsor_form)
+
+
+
 @app.route("/login", methods =['GET','POST'])
 def login():
      form = LoginForm()

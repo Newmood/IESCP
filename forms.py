@@ -15,11 +15,11 @@ class CreatorRegistrationForm(FlaskForm):
     lastname = StringField("Last name", validators=[DataRequired()])
     username = StringField("Username", validators=[DataRequired(),Length(min=4,max=16)]) 
     email = StringField("Enter your email", validators=[DataRequired(), Email()])
-    phone_number = PhoneNumberField("Phone Number", validators=[DataRequired()])
+    phone_number = StringField("Phone Number", validators=[DataRequired()])
     # links 
-    social_1 = StringField('Social media link', validators=[DataRequired(), URL()])
-    social_2 = StringField('Social media link', validators=[URL()])
-    social_3 = StringField('Social media link', validators=[URL()])
+    social_1 = StringField('Social media link 1', validators=[DataRequired(), URL()])
+    social_2 = StringField('Social media link 2', validators=[URL()])
+    social_3 = StringField('Social media link 3', validators=[URL()])
     # more info
     profile_pic = FileField("Profile Picture")
     category = SelectField("Category", choices=[('tech',"Technology"),('fitness','Fitness'),('fashion','Fashion'),('beauty','Beauty'),('game','Gaming'),('edu','Educatoinal'),('travel','Travel'),('other','Other')], validators=[DataRequired()])
@@ -39,12 +39,13 @@ class SponsorRegistrationForm(FlaskForm):
     lastname = StringField("Last name", validators=[DataRequired()])
     username = StringField("Username", validators=[DataRequired(),Length(min=4,max=16)]) 
     email = StringField("Enter your email", validators=[DataRequired(), Email()])
-    phone_number = PhoneNumberField("Phone Number", validators=[DataRequired()])
+    phone_number = StringField("Phone Number", validators=[DataRequired()])
     # company info
+    profile_pic = FileField("Profile Picture")
     company_name = StringField("Company/ Individual Name", validators=[DataRequired(), Length(min=4,max=50)])
-    industry = StringField("industry", validators=[DataRequired(), Length(min=4,max=50)])
+    industry = StringField("Industry", validators=[DataRequired(), Length(min=4,max=50)])
     website = StringField("Website",validators=[URL()])
-    company_address = TextAreaField("Company Adress",validators=[DataRequired(),Length(min=15,max=100)])
+    company_address = TextAreaField("Company Address",validators=[DataRequired(),Length(min=15,max=100)])
     # set password
     password = PasswordField("Enter your password", validators=[DataRequired(), Length(min=8)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])

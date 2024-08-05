@@ -11,8 +11,11 @@
             <p class="lead">Are you a company sponsoring an advertisement campaign or a creator?</p>
             <hr class="my-2">
             <p>IESCP is a platform that offers sponsors host ad-campaigns seamlessly and help creators grow by connecting them with opportunities.</p>
-            <a class="btn btn-primary btn-lg" href="#" role="button">Register</a>
-            <a class="btn btn-secondary btn-lg" href="{{ url_for('login')}}" role="button">Sign In</a>
+            <a class="btn btn-outline-dark" href="{{ url_for('creator_register') }}" role="button">Influencer Register</a>
+            <a class="btn btn-outline-dark" href="{{ url_for('sponsor_register') }}" role="button">Sponsor Register</a>
+
+            <p class="pt-4">Already have an account?</p>
+            <a class="btn btn-outline-primary" href="{{ url_for('login')}}" role="button">Sign In</a>
         </div>
 
 {% endblock content %}
