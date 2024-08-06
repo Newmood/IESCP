@@ -77,5 +77,11 @@ def login():
                flash('Login unsuccessful. Please check credentials and try again.','danger')
      return render_template('login.html', title="Login", form=form)
 
+@app.route("/register")
+def register():
+     creator_form = CreatorRegistrationForm()
+     sponsor_form = SponsorRegistrationForm()
+     return render_template('z_initial_register.html',title='register',creator_form=creator_form, sponsor_form=sponsor_form)
+
 if __name__ == "__main__":
         app.run(debug=True)
