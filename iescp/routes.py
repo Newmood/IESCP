@@ -1,11 +1,8 @@
-from flask import Flask
-from flask import render_template, url_for, flash, redirect, request
 import requests as rq
-from forms import *
-
-app = Flask(__name__)
-
-app.config['SECRET_KEY'] = '7cf5fbfb549d204db232cebd4500fdb3'
+from flask import render_template, url_for, flash, redirect, request
+from iescp.forms import *
+from iescp.models import Sponsor, Post
+from iescp import app
 
 ads_posts= [
      {
@@ -82,6 +79,3 @@ def register():
      creator_form = CreatorRegistrationForm()
      sponsor_form = SponsorRegistrationForm()
      return render_template('z_initial_register.html',title='register',creator_form=creator_form, sponsor_form=sponsor_form)
-
-if __name__ == "__main__":
-        app.run(debug=True)
