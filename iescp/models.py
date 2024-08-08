@@ -1,7 +1,12 @@
 from datetime import datetime, timezone
-from iescp import db
+from iescp import db, login_manager
+from flask_login import UserMixin
 
-class Sponsor(db.Model):
+@login_manager.user_loader
+def load_user(user_id):
+     return Sponsor.query.get(int(user_id))
+
+class Sponsor(db.Model, UserMixin):
      id = db.Column(db.Integer, primary_key=True)
      username = db.Column(db.String(16), unique=True, nullable =False)
      email = db.Column(db.String(16), unique=True, nullable =False)

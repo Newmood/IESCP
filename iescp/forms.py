@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField, FileField, DateField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField, FileField, DateField, ValidationError
 from wtforms.validators import DataRequired, Length, Email, EqualTo, URL
 from wtforms_alchemy import PhoneNumberField
+from iescp.models import *
 
 class LoginForm(FlaskForm):
     email = StringField("Enter your email", validators=[DataRequired(), Email()])
@@ -52,6 +53,16 @@ class SponsorRegistrationForm(FlaskForm):
     # NEED A FLAG TAG FOR ADMIN REASONS
 
     submit = SubmitField('Register')
+
+    def validate_username(self,username):
+        user = Sponsor.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('Username not available, please choose another.')
+    
+    def validate_email(self,email):
+        user = Sponsor.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('Account with this email aready exists. Want to log in instead?')
 
     
 
