@@ -54,7 +54,10 @@ def creator_register():
           return redirect(url_for('home'))
      creator_form = CreatorRegistrationForm()
      if creator_form.validate_on_submit():
-          
+          hashed_pwd = bcrypt.generate_password_hash(creator_form.password.data).decode('utf-8')
+          user = Creator(firstname = creator_form.firstname.data, lastname= creator_form.lastname.data ,username = creator_form.username.data, email = creator_form.email.data, password = hashed_pwd, social_link_1= creator_form.social_1.data)
+          db.session.add(user)
+          db.session.commit()
           flash("Creator account has been created. Please login to continue.",'success')
           return redirect(url_for('login'))
      return render_template('creator/creator_register.html', title="Creator Register", creator_form=creator_form)
@@ -81,15 +84,22 @@ def login():
           return redirect(url_for('home'))
      form = LoginForm()
      if form.validate_on_submit():
-          user = Sponsor.query.filter_by(email=form.email.data).first()
-          if user and bcrypt.check_password_hash(user.password, form.password.data):
-               login_user(user,remember=form.remember.data)
-               # next_page = request.args.get('next')
-               # if next_page:
-               #      return redirect(next_page)
-               return redirect(url_for('home'))
+          userS = Sponsor.query.filter_by(email=form.email.data).first()
+          userC = Creator.query.filter_by(email = form.email.data).first()
+
+          if userS and bcrypt.check_password_hash(userS.password, form.password.data):
+               user = userS
+          elif userC and bcrypt.check_password_hash(userC.password, form.password.data):
+               user = userC
           else:
                flash('Login unsuccessful. Please check credentials and try again.','danger')
+
+          login_user(user,remember=form.remember.data)
+          # next_page = request.args.get('next')
+          # if next_page:
+          #      return redirect(next_page)
+          return redirect(url_for('home'))
+
      return render_template('login.html', title="Login", form=form)
 
 # @app.route("/register")
