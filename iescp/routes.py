@@ -55,8 +55,11 @@ def creator_register():
      creator_form = CreatorRegistrationForm()
      if creator_form.validate_on_submit():
           hashed_pwd = bcrypt.generate_password_hash(creator_form.password.data).decode('utf-8')
-          user = Creator(firstname = creator_form.firstname.data, lastname= creator_form.lastname.data ,username = creator_form.username.data, email = creator_form.email.data, password = hashed_pwd, social_link_1= creator_form.social_1.data)
+          user = CommonUser(role= 'Creator', username = creator_form.username.data, password = hashed_pwd, email = creator_form.email.data)
           db.session.add(user)
+          db.session.commit()
+          userC = Creator(common_id= user.id ,firstname = creator_form.firstname.data, lastname= creator_form.lastname.data , social_link_1= creator_form.social_1.data)
+          db.session.add(userC)
           db.session.commit()
           flash("Creator account has been created. Please login to continue.",'success')
           return redirect(url_for('login'))
@@ -69,8 +72,11 @@ def sponsor_register():
      sponsor_form = SponsorRegistrationForm()
      if sponsor_form.validate_on_submit():
           hashed_pwd = bcrypt.generate_password_hash(sponsor_form.password.data).decode('utf-8')
-          user = Sponsor(username = sponsor_form.username.data, email = sponsor_form.email.data, password = hashed_pwd)
+          user = CommonUser(role= 'Sponsor', username = sponsor_form.username.data, password = hashed_pwd, email=sponsor_form.email.data)
           db.session.add(user)
+          db.session.commit()
+          userS = Sponsor(common_id= user.id)
+          db.session.add(userS)
           db.session.commit()
           flash("Sponsor account has been created. Please login to continue.",'success')
           return redirect(url_for('login'))
@@ -84,22 +90,16 @@ def login():
           return redirect(url_for('home'))
      form = LoginForm()
      if form.validate_on_submit():
-          userS = Sponsor.query.filter_by(email=form.email.data).first()
-          userC = Creator.query.filter_by(email = form.email.data).first()
+          user = CommonUser.query.filter_by(email = form.email.data).first()
 
-          if userS and bcrypt.check_password_hash(userS.password, form.password.data):
-               user = userS
-          elif userC and bcrypt.check_password_hash(userC.password, form.password.data):
-               user = userC
+          if user and bcrypt.check_password_hash(user.password, form.password.data):
+               login_user(user,remember=form.remember.data)
+               # next_page = request.args.get('next')
+               # if next_page:
+               #      return redirect(next_page)
+               return redirect(url_for('home'))
           else:
                flash('Login unsuccessful. Please check credentials and try again.','danger')
-
-          login_user(user,remember=form.remember.data)
-          # next_page = request.args.get('next')
-          # if next_page:
-          #      return redirect(next_page)
-          return redirect(url_for('home'))
-
      return render_template('login.html', title="Login", form=form)
 
 # @app.route("/register")
@@ -113,3 +113,12 @@ def login():
 def logout():
      logout_user()
      return redirect(url_for('landing'))
+
+@app.route("/campaign")
+@login_required
+def campaign():
+     if current_user.role == "Sponsor":
+          return render_template("sponsor/02_sponsor_camp_list.html", title= "Campaigns")
+     elif current_user.role == "Creator":
+          return render_template("creator/02_creator_campaigns.html", title= "Campaigns")
+          

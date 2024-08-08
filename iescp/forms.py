@@ -35,12 +35,12 @@ class CreatorRegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_username(self,username):
-        user = Creator.query.filter_by(username=username.data).first()
+        user = CommonUser.query.filter_by(username=username.data).first()
         if user:
             raise ValidationError('Username not available, please choose another.')
     
     def validate_email(self,email):
-        user = Creator.query.filter_by(email=email.data).first()
+        user = CommonUser.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('Account with this email aready exists. Want to log in instead?')
 
@@ -65,12 +65,12 @@ class SponsorRegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_username(self,username):
-        user = Sponsor.query.filter_by(username=username.data).first()
+        user = CommonUser.query.filter_by(username=username.data).first()
         if user:
             raise ValidationError('Username not available, please choose another.')
     
     def validate_email(self,email):
-        user = Sponsor.query.filter_by(email=email.data).first()
+        user = CommonUser.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('Account with this email aready exists. Want to log in instead?')
 
