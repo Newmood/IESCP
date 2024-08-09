@@ -1,3 +1,38 @@
 <!-- PAGE CONTENTS:
  navbar : settings - edit profile, notifications
  Company information, Active Campaigns list, Creator request list -->
+
+ {% extends "layout.html" %}
+
+{% block content %}
+        <div class="content-section">
+            <div class="media">
+                <img src="" alt="user-profile-picture" class="rounded-circle account-img">
+                <div class="media-body">
+                    <h2 class="account-name"> {{current_user.username}}</h2>
+                    <p class="text-secondary">{{ current_user.email  }}</p>
+                    <p class="text-secondary"> Social Links :
+                        {% if creator_data %}
+                            {% if creator_data.social_link_1 %}
+                                <a href="{{ creator_data.social_link_1 }}" target="_blank"> {{ creator_data.social_link_1 }}</a>
+                            {% endif %}
+                            {% if creator_data.social_link_2 %}
+                                , <a href="{{ creator_data.social_link_2 }}" target="_blank"> {{ creator_data.social_link_2 }}</a>
+                            {% endif %}
+                            {% if creator_data.social_link_3 %}
+                                , <a href="{{ creator_data.social_link_3 }}" target="_blank">{{ creator_data.social_link_3 }}</a>
+                            {% endif %}
+                        {% endif %}
+                    </p>
+                    <p class="article-content">
+                        <span> Category : {{ creator_data.category }} </span>
+                        <span> Date of Birth : {{ creator_data.dob }} </span>
+                        <span> Location : {{ creator_data.location}} </span>
+                    </p>
+                    <p class="article-content">Bio : {{ creator_data.bio }}</p>
+                </div>
+            </div>
+        </div>
+
+
+{% endblock content %}

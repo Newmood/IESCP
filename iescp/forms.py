@@ -93,9 +93,20 @@ class UpdateAccountCreator(FlaskForm):
             user = CommonUser.query.filter_by(username=username.data).first()
             if user:
                 raise ValidationError('Username not available, please choose another.')
-    
-    def validate_email(self,email):
-        if email.data != current_user.email:
-            user = CommonUser.query.filter_by(email=email.data).first()
-            if user:
-                raise ValidationError('Account with this email aready exists. Want to log in instead?')
+
+class UpdateAccountSponsor(FlaskForm):
+    # basic
+    username = StringField("Username", validators=[DataRequired(),Length(min=4,max=16)]) 
+    # company info
+    profile_pic = FileField("Profile Picture")
+    company_name = StringField("Company/ Individual Name", validators=[DataRequired(), Length(min=4,max=50)])
+    industry = StringField("Industry", validators=[DataRequired(), Length(min=4,max=50)])
+    website = StringField("Website",validators=[URL()])
+    company_address = TextAreaField("Company Address",validators=[DataRequired(),Length(min=15,max=100)])
+
+    submit = SubmitField('Register')
+
+    def validate_username(self,username):
+        user = CommonUser.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('Username not available, please choose another.')

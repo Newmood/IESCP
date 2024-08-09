@@ -3,6 +3,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flask_login import login_user, current_user, logout_user, login_required
 from iescp.forms import *
 from iescp.models import *
+from iescp.decorators import creator_required, sponsor_required
 from iescp import app, db, bcrypt
 
 ads_posts= [
@@ -42,11 +43,6 @@ ads_posts= [
 @app.route("/")
 def landing():
     return render_template('landing.html')
-
-@app.route("/home")
-@login_required
-def home():
-    return render_template('index.html', title="Home" ,ads_posts= ads_posts)
 
 @app.route("/creator-register", methods=['GET','POST'])
 def creator_register():
@@ -114,28 +110,13 @@ def logout():
      logout_user()
      return redirect(url_for('landing'))
 
-@app.route("/campaign")
+@app.route("/home")
 @login_required
-def campaign():
-     if current_user.role == "Sponsor":
-          return render_template("sponsor/02_sponsor_camp_list.html", title= "Campaigns")
-     elif current_user.role == "Creator":
-          return render_template("creator/02_creator_campaigns.html", title= "Campaigns")
-     else:
-          return redirect(url_for('home'))
-          
-@app.route("/profile")
-@login_required
-def profile():
-     if current_user.role == "Sponsor":
-          return render_template('profile.html', title="Profile")
-     elif current_user.role == "Creator":
-          creator_data = Creator.query.filter_by(common_id=current_user.id).first()
-          return render_template('profile.html', title="Profile", creator_data= creator_data)
-     else:
-          return redirect(url_for('home'))
-    
+def home():
+    return render_template('index.html', title="Home" ,ads_posts= ads_posts)
 
+
+# DASHBOARD PAGE ----------------------------
 @app.route("/dashboard")
 @login_required
 def dashboard():
@@ -146,7 +127,20 @@ def dashboard():
           return render_template("creator/01_creator_dashboard.html", title= "Dashboard", creator_data=creator_data)
      else:
           return redirect(url_for('home'))
+     
 
+# CAMPAIGN PAGE ----------------------------
+@app.route("/campaign")
+@login_required
+def campaign():
+     if current_user.role == "Sponsor":
+          return render_template("sponsor/02_sponsor_camp_list.html", title= "Campaigns")
+     elif current_user.role == "Creator":
+          return render_template("creator/02_creator_campaigns.html", title= "Campaigns")
+     else:
+          return redirect(url_for('home'))
+     
+# BROWSE PAGE ----------------------------
 @app.route("/browse")
 @login_required
 def browse():
@@ -154,6 +148,66 @@ def browse():
           return render_template("sponsor/03_browse_creator.html", title= "Browse")
      elif current_user.role == "Creator":
           creator_data = Creator.query.filter_by(common_id=current_user.id).first()
-          return render_template("creator/03_browse_camps.html", title= "Browse", )
+          return render_template("creator/03_browse_camps.html", title= "Browse", creator_data = creator_data)
      else:
           return redirect(url_for('home'))
+          
+
+# PROFILE PAGE ----------------------------
+@app.route("/creator-profile", methods=['GET','POST'])
+@login_required
+@creator_required
+def creator_profile():
+     creator_data = Creator.query.filter_by(common_id=current_user.id).first()
+     update_form = UpdateAccountCreator()
+     if update_form.validate_on_submit():
+          current_user.username = update_form.username.data
+          current_user.profile_pic = update_form.profile_pic.data
+          creator_data.social_link_1 = update_form.social_1.data
+          creator_data.social_link_2 = update_form.social_2.data
+          creator_data.social_link_3 = update_form.social_3.data
+          creator_data.category = update_form.category.data
+          creator_data.location = update_form.location.data
+          creator_data.dob = update_form.date_of_birth.data
+          creator_data.bio = update_form.biodata.data
+          db.session.commit()
+          flash("Your profile has been updated.",'success')
+          return redirect(url_for('creator_profile'))
+     elif request.method == 'GET':
+          update_form.username.data = current_user.username
+          update_form.social_1.data = creator_data.social_link_1
+          update_form.social_2.data = creator_data.social_link_2
+          update_form.social_3.data = creator_data.social_link_3
+          update_form.category.data = creator_data.category
+          update_form.location.data = creator_data.location
+          update_form.date_of_birth.data = creator_data.dob
+          update_form.biodata.data = creator_data.bio
+     return render_template('creator/creator_profile.html', title="Profile", creator_data= creator_data, update_form=update_form)
+
+@app.route("/sponsor-profile", methods=['GET','POST'])
+@login_required
+@sponsor_required
+def sponsor_profile():
+     sponsor_data = Sponsor.query.filter_by(common_id=current_user.id).first()
+     update_form = UpdateAccountSponsor()
+     if update_form.validate_on_submit():
+          current_user.username = update_form.username.data
+          current_user.profile_pic = update_form.profile_pic.data
+          sponsor_data.company = update_form.company_name.data
+          sponsor_data.industry = update_form.industry.data
+          sponsor_data.website = update_form.website.data
+          sponsor_data.company_address = update_form.company_address.data
+          db.session.commit()
+          flash("Your profile has been updated.",'success')
+          return redirect(url_for('sponsor_profile'))
+     elif request.method == 'GET':
+          update_form.username.data = current_user.username
+          update_form.company_name.data = sponsor_data.company
+          update_form.industry.data = sponsor_data.industry
+          update_form.website.data = sponsor_data.website
+          update_form.company_address.data = sponsor_data.company_address
+     return render_template('sponsor/sponsor_profile.html', title="Profile", sponsor_data=sponsor_data, update_form=update_form)
+
+
+
+

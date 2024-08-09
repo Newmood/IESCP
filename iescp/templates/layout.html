@@ -46,7 +46,12 @@
                         </ul>
                         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-2">
                             <li class="nav-item">
-                                <a class="btn btn-outline-light" href="{{url_for('profile')}}"> Profile </a>
+                                {% if current_user.role=='Creator' %}
+                                    <a class="btn btn-outline-light" href="{{url_for('creator_profile')}}"> Profile </a>
+                                {% endif %}
+                                {% if current_user.role=='Sponsor' %}
+                                    <a class="btn btn-outline-light" href="{{url_for('sponsor_profile')}}"> Profile </a>
+                                {% endif %}
                             </li>
                             <!-- <li class="nav-item">
                                 <a class="btn btn-outline-light" href="#"> Notifications </a>
