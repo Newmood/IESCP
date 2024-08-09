@@ -10,7 +10,25 @@ body {
     background: #fff;
     color: #333333;
     margin-top: 5rem;
+    height: 100vh;
 }
+
+body::before{
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/layout-bg-2.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    opacity: 0.3;
+    z-index: -1;
+}
+
 
 .site-header .navbar-nav .nav-link.active {
     font-weight: 500;

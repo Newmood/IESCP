@@ -4,52 +4,55 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="content-section">
-    <div class="media">
-        <img src="" alt="user-profile-picture" class="rounded-circle account-img">
-        <div class="media-body">
-            <h2 class="account-name"> {{current_user.username}}</h2>
-            <p class="text-secondary">{{ current_user.email  }}</p>
-            <p class="text-secondary"> Social Links :
-                {% if creator_data %}
-                    {% if creator_data.social_link_1 %}
-                        <a href="{{ creator_data.social_link_1 }}" target="_blank"> {{ creator_data.social_link_1 }}</a>
+    <div class="content-section">
+        <div class="d-flex">
+            <div class="flex-shrink-0">
+                <img src="{{ image_file }}" alt="user-profile-picture" class="rounded-circle account-img">
+            </div>
+            <div class="flex-grow-1 ms-3">
+                <h2 class="account-name"> {{current_user.username}}</h2>
+                <p class="text-secondary">{{ current_user.email  }}</p>
+                <p class="h3">{{ current_user.firstname }} {{ current_user.lastname }}</p>
+                <p class="text-secondary"> Social Links :
+                    {% if creator_data %}
+                        {% if creator_data.social_link_1 %}
+                            <a href="{{ creator_data.social_link_1 }}" target="_blank"> {{ creator_data.social_link_1 }}</a>
+                        {% endif %}
+                        {% if creator_data.social_link_2 %}
+                            , <a href="{{ creator_data.social_link_2 }}" target="_blank"> {{ creator_data.social_link_2 }}</a>
+                        {% endif %}
+                        {% if creator_data.social_link_3 %}
+                            , <a href="{{ creator_data.social_link_3 }}" target="_blank">{{ creator_data.social_link_3 }}</a>
+                        {% endif %}
                     {% endif %}
-                    {% if creator_data.social_link_2 %}
-                        , <a href="{{ creator_data.social_link_2 }}" target="_blank"> {{ creator_data.social_link_2 }}</a>
-                    {% endif %}
-                    {% if creator_data.social_link_3 %}
-                        , <a href="{{ creator_data.social_link_3 }}" target="_blank">{{ creator_data.social_link_3 }}</a>
-                    {% endif %}
-                {% endif %}
-            </p>
-            <p class="article-content">
-                <span> Category : {{ creator_data.category }} </span>
-                <span> Date of Birth : {{ creator_data.dob }} </span>
-                <span> Location : {{ creator_data.location}} </span>
-            </p>
-            <p class="article-content">Bio : {{ creator_data.bio }}</p>
+                </p>
+                <p class="article-content">
+                    <span> Category : {{ creator_data.category }} </span>
+                    <span> Date of Birth : {{ creator_data.dob }} </span>
+                    <span> Location : {{ creator_data.location}} </span>
+                </p>
+                <p class="article-content">Bio : {{ creator_data.bio }}</p>
+            </div>
         </div>
-    </div>
-    <div class="text-end"> 
-        <a class="btn btn-outline-dark" href="{{url_for('creator_profile')}}">Update Profile</a> 
-    </div>
-</div>
-
-<div class="container"> 
-<div class="row ">
-    <div class="col-md-6">
-        <div class="content-section">
-            <h2 class="fs-4"> Active Campaigns</h2>
+        <div class="text-end"> 
+            <a class="btn btn-outline-dark" href="{{url_for('creator_profile')}}">Update Profile</a> 
         </div>
     </div>
 
-    <div class="col-md-6">
-        <div class="content-section">
-            <h2 class="fs-4"> New requests </h2>
+    <div class="container"> 
+    <div class="row ">
+        <div class="col-md-6">
+            <div class="content-section">
+                <h2 class="fs-4"> Active Campaigns</h2>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="content-section">
+                <h2 class="fs-4"> New requests </h2>
+            </div>
         </div>
     </div>
-</div>
-</div>
+    </div>
 
 {% endblock content %}

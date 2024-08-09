@@ -1,48 +1,17 @@
 {% extends "layout.html" %}
 
 {% block content %}
-        <div class="content-section">
-            <div class="media">
-                <img src="" alt="user-profile-picture" class="rounded-circle account-img">
-                <div class="media-body">
-                    <h2 class="account-name"> {{current_user.username}}</h2>
-                    <p class="text-secondary">{{ current_user.email  }}</p>
-                    <p class="text-secondary"> Social Links :
-                        {% if creator_data %}
-                            {% if creator_data.social_link_1 %}
-                                <a href="{{ creator_data.social_link_1 }}" target="_blank"> {{ creator_data.social_link_1 }}</a>
-                            {% endif %}
-                            {% if creator_data.social_link_2 %}
-                                , <a href="{{ creator_data.social_link_2 }}" target="_blank"> {{ creator_data.social_link_2 }}</a>
-                            {% endif %}
-                            {% if creator_data.social_link_3 %}
-                                , <a href="{{ creator_data.social_link_3 }}" target="_blank">{{ creator_data.social_link_3 }}</a>
-                            {% endif %}
-                        {% endif %}
-                    </p>
-                    <p class="article-content">
-                        <span> Category : {{ creator_data.category }} </span>
-                        <span> Date of Birth : {{ creator_data.dob }} </span>
-                        <span> Location : {{ creator_data.location}} </span>
-                    </p>
-                    <p class="article-content">Bio : {{ creator_data.bio }}</p>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- HERE -->
+        <!-- UPDATE FORM HERE -->
         <div class="content-section">
             <div class="text-center mb-4 ">
                 <h1 class="fs-4 mb-2"> Update profile information</h1>
             </div>
             <hr>
             
-            <form method="POST" action="{{ url_for('creator_profile') }}">
+            <form method="POST" action="{{ url_for('sponsor_profile') }}" enctype="multipart/form-data">
                 {{ update_form.hidden_tag() }}
-                
-                <p class="text-start lead"> Basic Data </p>
     
+                <p class="text-start lead"> Basic Data </p>
                 <div class="form-group d-flex align-items-center mb-3">
                     <div class="col-md-2"> {{ update_form.username.label (class='form-label') }} </div>
                     <div class="col-md-auto d-flex flex-row">
@@ -64,123 +33,82 @@
                 <p class="text-start lead"> Profile Data</p>
     
                 <div class="row mb-3">
-                <div class="form-group col-md-4">
-                    {{ update_form.social_1.label (class='form-label') }}
-                    {% if update_form.social_1.errors %}
-                        {{ update_form.social_1(class="form-control  is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in update_form.social_1.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ update_form.social_1(class="form-control ") }}
-                    {% endif %}
-                </div>
-                <div class="form-group col-md-4">
-                    {{ update_form.social_2.label (class='form-label') }}
-                    {% if update_form.social_2.errors %}
-                        {{ update_form.social_2(class="form-control  is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in update_form.social_2.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ update_form.social_2(class="form-control ") }}
-                    {% endif %}
-                </div>
-                <div class="form-group col-md-4">
-                    {{ update_form.social_3.label (class='form-label') }}
-                    {% if update_form.social_3.errors %}
-                        {{ update_form.social_3(class="form-control  is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in update_form.social_3.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ update_form.social_3(class="form-control ") }}
-                    {% endif %}
-                </div>
-                </div>
-    
-                <div class="row mb-3">
-                <div class="form-group col-md-6">
-                    {{ update_form.profile_pic.label (class='form-label') }}
-                    {% if update_form.profile_pic.errors %}
-                        {{ update_form.profile_pic(class="form-control  is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in update_form.profile_pic.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ update_form.profile_pic(class="form-control ") }}
-                    {% endif %}
-                </div>
-                <div class="form-group col-md-6">
-                    {{ update_form.category.label (class='form-label') }}
-                    {% if update_form.category.errors %}
-                        {{ update_form.category(class="form-select  is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in update_form.category.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ update_form.category(class="form-select ") }}
-                    {% endif %}
-                </div>
+                    <div class="form-group col-md-6">
+                        {{ update_form.company_name.label (class='form-label') }}
+                        {% if update_form.company_name.errors %}
+                            {{ update_form.company_name(class="form-control  is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in update_form.company_name.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ update_form.company_name(class="form-control ") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ update_form.profile_pic.label (class='form-label') }}
+                        {% if update_form.profile_pic.errors %}
+                            {{ update_form.profile_pic(class="form-control  is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in update_form.profile_pic.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ update_form.profile_pic(class="form-control ") }}
+                        {% endif %}
+                    </div>
                 </div>
                 
                 <div class="row mb-3">
-                <div class="form-group col-md-6">
-                    {{ update_form.location.label (class='form-label') }}
-                    {% if update_form.location.errors %}
-                        {{ update_form.location(class="form-control  is-invalid") }}
+                    <div class="form-group col-md-6">
+                        {{ update_form.industry.label (class='form-label') }}
+                        {% if update_form.industry.errors %}
+                            {{ update_form.industry(class="form-control  is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in update_form.industry.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ update_form.industry(class="form-control ") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ update_form.website.label (class='form-label') }}
+                        {% if update_form.website.errors %}
+                            {{ update_form.website(class="form-control  is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in update_form.website.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ update_form.website(class="form-control ") }}
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="form-group mb-3">
+                    {{ update_form.company_address.label (class='form-label') }}
+                    {% if update_form.company_address.errors %}
+                        {{ update_form.company_address(class="form-control  is-invalid") }}
                         <div class="invalid-feedback">
-                            {% for error in update_form.location.errors %}
+                            {% for error in update_form.company_address.errors %}
                                 <span>{{ error }}</span>
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ update_form.location(class="form-control ") }}
-                    {% endif %}
-                </div>
-                <div class="form-group col-md-6">
-                    {{ update_form.date_of_birth.label (class='form-label') }}
-                    {% if update_form.date_of_birth.errors %}
-                        {{ update_form.date_of_birth(class="form-control  is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in update_form.date_of_birth.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ update_form.date_of_birth(class="form-control ") }}
-                    {% endif %}
-                </div>
-                </div>
-    
-                <div class="form-group">
-                    {{ update_form.biodata.label (class='form-label') }}
-                    {% if update_form.biodata.errors %}
-                        {{ update_form.biodata(class="form-control  is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in update_form.biodata.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ update_form.biodata(class="form-control ") }}
+                        {{ update_form.company_address(class="form-control ") }}
                     {% endif %}
                 </div>
 
+    
                 <div class="pt-3 d-grid gap-2 col-2 mx-auto form-group">
                     {{ update_form.submit(class="btn btn-outline-dark  py-2") }}
                 </div>
-            </form>        
+            </form>       
         </div>
 
 {% endblock content %}

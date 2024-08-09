@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed
 from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField, FileField, DateField, ValidationError
 from wtforms.validators import DataRequired, Length, Email, EqualTo, URL, Optional
@@ -23,7 +24,6 @@ class CreatorRegistrationForm(FlaskForm):
     social_2 = StringField('Social media link 2', validators=[Optional() ,URL()])
     social_3 = StringField('Social media link 3', validators=[Optional() , URL()])
     # more info
-    profile_pic = FileField("Profile Picture")
     category = SelectField("Category", choices=[('Technology',"Technology"),('Fitness','Fitness'),('Fashion','Fashion'),('Beauty','Beauty'),('Gaming','Gaming'),('Educational','Educational'),('Travel','Travel'),('Other','Other')], validators=[DataRequired()])
     biodata = TextAreaField("Bio/Description", validators=[DataRequired(), Length(max=500)])
     location = StringField("Location", validators=[DataRequired(), Length(max=50)])
@@ -52,7 +52,6 @@ class SponsorRegistrationForm(FlaskForm):
     email = StringField("Enter your email", validators=[DataRequired(), Email()])
     phone_number = StringField("Phone Number", validators=[DataRequired()])
     # company info
-    profile_pic = FileField("Profile Picture")
     company_name = StringField("Company/ Individual Name", validators=[DataRequired(), Length(min=4,max=50)])
     industry = StringField("Industry", validators=[DataRequired(), Length(min=4,max=50)])
     website = StringField("Website",validators=[URL()])
@@ -81,7 +80,7 @@ class UpdateAccountCreator(FlaskForm):
     social_2 = StringField('Social media link 2', validators=[Optional() ,URL()])
     social_3 = StringField('Social media link 3', validators=[Optional() , URL()])
     # more info
-    profile_pic = FileField("Profile Picture")
+    profile_pic = FileField("Profile Picture", validators=[FileAllowed(['jpg','png','jpeg'])])
     category = SelectField("Category", choices=[('Technology',"Technology"),('Fitness','Fitness'),('Fashion','Fashion'),('Beauty','Beauty'),('Gaming','Gaming'),('Educational','Educational'),('Travel','Travel'),('Other','Other')], validators=[DataRequired()])
     biodata = TextAreaField("Bio/Description", validators=[DataRequired(), Length(max=500)])
     location = StringField("Location", validators=[DataRequired(), Length(max=50)])
@@ -98,15 +97,16 @@ class UpdateAccountSponsor(FlaskForm):
     # basic
     username = StringField("Username", validators=[DataRequired(),Length(min=4,max=16)]) 
     # company info
-    profile_pic = FileField("Profile Picture")
+    profile_pic = FileField("Profile Picture", validators=[FileAllowed(['jpg','png','jpeg'])])
     company_name = StringField("Company/ Individual Name", validators=[DataRequired(), Length(min=4,max=50)])
     industry = StringField("Industry", validators=[DataRequired(), Length(min=4,max=50)])
     website = StringField("Website",validators=[URL()])
     company_address = TextAreaField("Company Address",validators=[DataRequired(),Length(min=15,max=100)])
 
-    submit = SubmitField('Register')
+    submit = SubmitField('Update')
 
     def validate_username(self,username):
-        user = CommonUser.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError('Username not available, please choose another.')
+        if username.data != current_user.username:
+            user = CommonUser.query.filter_by(username=username.data).first()
+            if user:
+                raise ValidationError('Username not available, please choose another.')

@@ -8,7 +8,7 @@
             </div>
             <hr>
             
-            <form method="POST" action="{{ url_for('creator_profile') }}">
+            <form method="POST" action="{{ url_for('creator_profile') }}" enctype="multipart/form-data">
                 {{ update_form.hidden_tag() }}
                 
                 <p class="text-start lead"> Basic Data </p>

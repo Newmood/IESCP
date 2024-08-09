@@ -1,4 +1,7 @@
+import os
 import requests as rq
+import secrets
+from PIL import Image
 from flask import render_template, url_for, flash, redirect, request
 from flask_login import login_user, current_user, logout_user, login_required
 from iescp.forms import *
@@ -39,6 +42,17 @@ ads_posts= [
      }
 ]
 
+def save_pic(form_pic_data):
+     random_hex = secrets.token_hex(8)
+     _ , f_ext = os.path.splitext(form_pic_data.filename)
+     pic_fn = random_hex + f_ext
+     pic_path = os.path.join(app.root_path, 'static/images/profile_pics', pic_fn)
+     output_size = (125,125)
+     img = Image.open(form_pic_data)
+     img.thumbnail(output_size)
+     img.save(pic_path)
+
+     return pic_fn
 
 @app.route("/")
 def landing():
@@ -51,7 +65,7 @@ def creator_register():
      creator_form = CreatorRegistrationForm()
      if creator_form.validate_on_submit():
           hashed_pwd = bcrypt.generate_password_hash(creator_form.password.data).decode('utf-8')
-          user = CommonUser(role= 'Creator', username = creator_form.username.data, password = hashed_pwd, email = creator_form.email.data, firstname = creator_form.firstname.data, lastname= creator_form.lastname.data, phone_no = creator_form.phone_number.data )
+          user = CommonUser(role= 'Creator', username = creator_form.username.data, password = hashed_pwd, email = creator_form.email.data, firstname = creator_form.firstname.data, lastname= creator_form.lastname.data, phone_no = creator_form.phone_number.data)
           db.session.add(user)
           db.session.commit()
           userC = Creator(common_id= user.id, social_link_1= creator_form.social_1.data, social_link_2= creator_form.social_2.data, social_link_3= creator_form.social_3.data, category = creator_form.category.data, location = creator_form.location.data, dob = creator_form.date_of_birth.data, bio = creator_form.biodata.data)
@@ -120,11 +134,13 @@ def home():
 @app.route("/dashboard")
 @login_required
 def dashboard():
+     image_file = url_for('static',filename='images/profile_pics/'+current_user.profile_pic)
      if current_user.role == "Sponsor":
-          return render_template("sponsor/01_sponsor_dashboard.html", title= "Dashboard")
+          sponsor_data = Sponsor.query.filter_by(common_id=current_user.id).first()
+          return render_template("sponsor/01_sponsor_dashboard.html", title= "Dashboard", sponsor_data = sponsor_data, image_file=image_file)
      elif current_user.role == "Creator":
           creator_data = Creator.query.filter_by(common_id=current_user.id).first()
-          return render_template("creator/01_creator_dashboard.html", title= "Dashboard", creator_data=creator_data)
+          return render_template("creator/01_creator_dashboard.html", title= "Dashboard", creator_data=creator_data, image_file=image_file)
      else:
           return redirect(url_for('home'))
      
@@ -158,11 +174,17 @@ def browse():
 @login_required
 @creator_required
 def creator_profile():
+     image_file = url_for('static',filename='images/profile_pics/'+ current_user.profile_pic)
      creator_data = Creator.query.filter_by(common_id=current_user.id).first()
      update_form = UpdateAccountCreator()
      if update_form.validate_on_submit():
+          if update_form.profile_pic.data:
+               old_pic = current_user.profile_pic
+               pic_file = save_pic(update_form.profile_pic.data)
+               current_user.profile_pic = pic_file
+               if old_pic!='default.jpg':
+                    os.remove(os.path.join(app.root_path, 'static/images/profile_pics', old_pic))
           current_user.username = update_form.username.data
-          current_user.profile_pic = update_form.profile_pic.data
           creator_data.social_link_1 = update_form.social_1.data
           creator_data.social_link_2 = update_form.social_2.data
           creator_data.social_link_3 = update_form.social_3.data
@@ -175,6 +197,7 @@ def creator_profile():
           return redirect(url_for('creator_profile'))
      elif request.method == 'GET':
           update_form.username.data = current_user.username
+          update_form.profile_pic.data = current_user.profile_pic
           update_form.social_1.data = creator_data.social_link_1
           update_form.social_2.data = creator_data.social_link_2
           update_form.social_3.data = creator_data.social_link_3
@@ -182,17 +205,23 @@ def creator_profile():
           update_form.location.data = creator_data.location
           update_form.date_of_birth.data = creator_data.dob
           update_form.biodata.data = creator_data.bio
-     return render_template('creator/creator_profile.html', title="Profile", creator_data= creator_data, update_form=update_form)
+     return render_template('creator/creator_profile.html', title="Profile", creator_data= creator_data, update_form=update_form, image_file=image_file)
 
 @app.route("/sponsor-profile", methods=['GET','POST'])
 @login_required
 @sponsor_required
 def sponsor_profile():
+     image_file = url_for('static',filename='images/profile_pics/'+ current_user.profile_pic)
      sponsor_data = Sponsor.query.filter_by(common_id=current_user.id).first()
      update_form = UpdateAccountSponsor()
      if update_form.validate_on_submit():
+          if update_form.profile_pic.data:
+               old_pic = current_user.profile_pic
+               pic_file = save_pic(update_form.profile_pic.data)
+               current_user.profile_pic = pic_file
+               if old_pic!='default.jpg':
+                    os.remove(os.path.join(app.root_path, 'static/images/profile_pics', old_pic))
           current_user.username = update_form.username.data
-          current_user.profile_pic = update_form.profile_pic.data
           sponsor_data.company = update_form.company_name.data
           sponsor_data.industry = update_form.industry.data
           sponsor_data.website = update_form.website.data
@@ -202,12 +231,10 @@ def sponsor_profile():
           return redirect(url_for('sponsor_profile'))
      elif request.method == 'GET':
           update_form.username.data = current_user.username
+          update_form.profile_pic.data = current_user.profile_pic
           update_form.company_name.data = sponsor_data.company
           update_form.industry.data = sponsor_data.industry
           update_form.website.data = sponsor_data.website
           update_form.company_address.data = sponsor_data.company_address
-     return render_template('sponsor/sponsor_profile.html', title="Profile", sponsor_data=sponsor_data, update_form=update_form)
-
-
-
+     return render_template('sponsor/sponsor_profile.html', title="Profile", sponsor_data=sponsor_data, update_form=update_form, image_file=image_file)
 
