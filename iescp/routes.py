@@ -121,8 +121,39 @@ def campaign():
           return render_template("sponsor/02_sponsor_camp_list.html", title= "Campaigns")
      elif current_user.role == "Creator":
           return render_template("creator/02_creator_campaigns.html", title= "Campaigns")
+     else:
+          return redirect(url_for('home'))
           
 @app.route("/profile")
 @login_required
 def profile():
-    return render_template('profile.html', title="Profile")
+     if current_user.role == "Sponsor":
+          return render_template('profile.html', title="Profile")
+     elif current_user.role == "Creator":
+          creator_data = Creator.query.filter_by(common_id=current_user.id).first()
+          return render_template('profile.html', title="Profile", creator_data= creator_data)
+     else:
+          return redirect(url_for('home'))
+    
+
+@app.route("/dashboard")
+@login_required
+def dashboard():
+     if current_user.role == "Sponsor":
+          return render_template("sponsor/01_sponsor_dashboard.html", title= "Dashboard")
+     elif current_user.role == "Creator":
+          creator_data = Creator.query.filter_by(common_id=current_user.id).first()
+          return render_template("creator/01_creator_dashboard.html", title= "Dashboard", creator_data=creator_data)
+     else:
+          return redirect(url_for('home'))
+
+@app.route("/browse")
+@login_required
+def browse():
+     if current_user.role == "Sponsor":
+          return render_template("sponsor/03_browse_creator.html", title= "Browse")
+     elif current_user.role == "Creator":
+          creator_data = Creator.query.filter_by(common_id=current_user.id).first()
+          return render_template("creator/03_browse_camps.html", title= "Browse", )
+     else:
+          return redirect(url_for('home'))

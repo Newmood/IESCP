@@ -12,7 +12,7 @@ class CommonUser(db.Model,UserMixin):
      role = db.Column(db.String(25), nullable=False) # sponsor or creator
      username = db.Column(db.String(16), unique=True, nullable =False)    
      password = db.Column(db.String(60), nullable =False)
-     email = db.Column(db.String(16), unique=True, nullable =False)
+     email = db.Column(db.String(50), unique=True, nullable =False)
      firstname = db.Column(db.String(50), nullable=False)
      lastname = db.Column(db.String(50), nullable=False)
      profile_pic = db.Column(db.String(16), nullable =False, default='default.jpg')
@@ -61,7 +61,7 @@ class Post(db.Model):
      description = db.Column(db.Text, nullable =False)
      budget = db.Column(db.String(20), nullable =False)
      industry = db.Column(db.String(20), nullable =False)
-     end_date = db.Column(db.String(20), nullable =False)
+     end_date = db.Column(db.String(20), nullable =False) # CHANGE TO DATETIME
      user_id = db.Column(db.Integer,db.ForeignKey('sponsor.id'),nullable= False)
 
      def __repr__(self):

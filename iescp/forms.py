@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField, FileField, DateField, ValidationError
 from wtforms.validators import DataRequired, Length, Email, EqualTo, URL, Optional
 from wtforms_alchemy import PhoneNumberField
@@ -23,8 +24,8 @@ class CreatorRegistrationForm(FlaskForm):
     social_3 = StringField('Social media link 3', validators=[Optional() , URL()])
     # more info
     profile_pic = FileField("Profile Picture")
-    category = SelectField("Category", choices=[('tech',"Technology"),('fitness','Fitness'),('fashion','Fashion'),('beauty','Beauty'),('game','Gaming'),('edu','Educatoinal'),('travel','Travel'),('other','Other')], validators=[DataRequired()])
-    biodata = TextAreaField("Bio/Description", validators=[DataRequired(), Length(max=150)])
+    category = SelectField("Category", choices=[('Technology',"Technology"),('Fitness','Fitness'),('Fashion','Fashion'),('Beauty','Beauty'),('Gaming','Gaming'),('Educational','Educational'),('Travel','Travel'),('Other','Other')], validators=[DataRequired()])
+    biodata = TextAreaField("Bio/Description", validators=[DataRequired(), Length(max=500)])
     location = StringField("Location", validators=[DataRequired(), Length(max=50)])
     date_of_birth = DateField("Date of Birth", format='%Y-%m-%d', validators=[DataRequired()])
     # set password
@@ -73,5 +74,28 @@ class SponsorRegistrationForm(FlaskForm):
             raise ValidationError('Account with this email aready exists. Want to log in instead?')
 
     
+class UpdateAccountCreator(FlaskForm):
+    username = StringField("Username", validators=[DataRequired(),Length(min=4,max=16)]) 
+    # links 
+    social_1 = StringField('Social media link 1', validators=[DataRequired(), URL()])
+    social_2 = StringField('Social media link 2', validators=[Optional() ,URL()])
+    social_3 = StringField('Social media link 3', validators=[Optional() , URL()])
+    # more info
+    profile_pic = FileField("Profile Picture")
+    category = SelectField("Category", choices=[('Technology',"Technology"),('Fitness','Fitness'),('Fashion','Fashion'),('Beauty','Beauty'),('Gaming','Gaming'),('Educational','Educational'),('Travel','Travel'),('Other','Other')], validators=[DataRequired()])
+    biodata = TextAreaField("Bio/Description", validators=[DataRequired(), Length(max=500)])
+    location = StringField("Location", validators=[DataRequired(), Length(max=50)])
+    date_of_birth = DateField("Date of Birth", format='%Y-%m-%d', validators=[DataRequired()])
+    submit = SubmitField('Update')
 
-
+    def validate_username(self,username):
+        if username.data != current_user.username:
+            user = CommonUser.query.filter_by(username=username.data).first()
+            if user:
+                raise ValidationError('Username not available, please choose another.')
+    
+    def validate_email(self,email):
+        if email.data != current_user.email:
+            user = CommonUser.query.filter_by(email=email.data).first()
+            if user:
+                raise ValidationError('Account with this email aready exists. Want to log in instead?')
