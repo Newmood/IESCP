@@ -55,10 +55,10 @@ def creator_register():
      creator_form = CreatorRegistrationForm()
      if creator_form.validate_on_submit():
           hashed_pwd = bcrypt.generate_password_hash(creator_form.password.data).decode('utf-8')
-          user = CommonUser(role= 'Creator', username = creator_form.username.data, password = hashed_pwd, email = creator_form.email.data)
+          user = CommonUser(role= 'Creator', username = creator_form.username.data, password = hashed_pwd, email = creator_form.email.data, firstname = creator_form.firstname.data, lastname= creator_form.lastname.data, phone_no = creator_form.phone_number.data )
           db.session.add(user)
           db.session.commit()
-          userC = Creator(common_id= user.id ,firstname = creator_form.firstname.data, lastname= creator_form.lastname.data , social_link_1= creator_form.social_1.data)
+          userC = Creator(common_id= user.id, social_link_1= creator_form.social_1.data, social_link_2= creator_form.social_2.data, social_link_3= creator_form.social_3.data, category = creator_form.category.data, location = creator_form.location.data, dob = creator_form.date_of_birth.data, bio = creator_form.biodata.data)
           db.session.add(userC)
           db.session.commit()
           flash("Creator account has been created. Please login to continue.",'success')
@@ -72,10 +72,10 @@ def sponsor_register():
      sponsor_form = SponsorRegistrationForm()
      if sponsor_form.validate_on_submit():
           hashed_pwd = bcrypt.generate_password_hash(sponsor_form.password.data).decode('utf-8')
-          user = CommonUser(role= 'Sponsor', username = sponsor_form.username.data, password = hashed_pwd, email=sponsor_form.email.data)
+          user = CommonUser(role= 'Sponsor', username = sponsor_form.username.data, password = hashed_pwd, email=sponsor_form.email.data, firstname = sponsor_form.firstname.data, lastname= sponsor_form.lastname.data, phone_no = sponsor_form.phone_number.data)
           db.session.add(user)
           db.session.commit()
-          userS = Sponsor(common_id= user.id)
+          userS = Sponsor(common_id= user.id, company= sponsor_form.company_name.data, industry =sponsor_form.industry.data, website=sponsor_form.website.data, company_address= sponsor_form.company_address.data)
           db.session.add(userS)
           db.session.commit()
           flash("Sponsor account has been created. Please login to continue.",'success')
@@ -122,3 +122,7 @@ def campaign():
      elif current_user.role == "Creator":
           return render_template("creator/02_creator_campaigns.html", title= "Campaigns")
           
+@app.route("/profile")
+@login_required
+def profile():
+    return render_template('profile.html', title="Profile")

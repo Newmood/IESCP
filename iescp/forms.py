@@ -30,7 +30,6 @@ class CreatorRegistrationForm(FlaskForm):
     # set password
     password = PasswordField("Enter your password", validators=[DataRequired(), Length(min=8)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    # NEED A FLAG TAG FOR ADMIN REASONS
 
     submit = SubmitField('Register')
 
@@ -60,7 +59,6 @@ class SponsorRegistrationForm(FlaskForm):
     # set password
     password = PasswordField("Enter your password", validators=[DataRequired(), Length(min=8)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    # NEED A FLAG TAG FOR ADMIN REASONS
 
     submit = SubmitField('Register')
 
