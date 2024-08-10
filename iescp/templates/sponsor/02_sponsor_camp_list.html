@@ -11,7 +11,7 @@ Click on each campaign to view campaign description
 {% block content %}
     <div class="row mb-3 align-items-center">
         <div class="col-md-9">
-            <h1 class="text-start">View all campaigns</h1>
+            <h1 class="text-start h2">View all your campaigns</h1>
         </div>
         <div class="col-md-3">
             <a class="btn btn-outline-dark text-end" href="{{ url_for('create_campaign') }}"> Create New Campaign</a> 
@@ -19,6 +19,19 @@ Click on each campaign to view campaign description
     </div>
 
     <!-- LIST OF ALL CAMPAIGNS WITH MODALS -->
+    {% for post in ads_posts %}
+    <article class="d-flex content-section">
+        <div class="flex-grow-1 ms-3">
+            <div class="article-metadata"> 
+                <a class="mr-2 h5" href="#"> {{ post.author.common_user.username }}</a>
+                <small class="text-muted"> {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h3><a class="article-title h3" href="{{ url_for('post',post_id=post.id)}}"> {{ post.title }} </a></h3>
+            <p class="article-content"> {{ post.description }} </p>
+            
+        </div>
+    </article>
+    {% endfor %}
     
 
 {% endblock content %}

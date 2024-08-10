@@ -4,7 +4,6 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from flask_login import login_user, current_user, logout_user, login_required
-from sqlalchemy.orm import joinedload
 from iescp.forms import *
 from iescp.models import *
 from iescp.decorators import creator_required, sponsor_required
@@ -146,7 +145,8 @@ def dashboard():
 @login_required
 def campaign():
      if current_user.role == "Sponsor":
-          return render_template("sponsor/02_sponsor_camp_list.html", title= "Campaigns")
+          posts = Post.query.filter_by(author=current_user).all()
+          return render_template("sponsor/02_sponsor_camp_list.html", title= "Campaigns", ads_posts=posts)
      elif current_user.role == "Creator":
           return render_template("creator/02_creator_campaigns.html", title= "Campaigns")
      else:
