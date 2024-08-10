@@ -2,7 +2,7 @@
  navbar : settings - edit profile, notifications
  Company information, Active Campaigns list, Creator request list -->
 
- {% extends "layout.html" %}
+{% extends "layout.html" %}
 
 {% block content %}
     <div class="content-section">
@@ -21,6 +21,9 @@
                 </p>
                 <p class="article-content">Company Addresss : {{ sponsor_data.company_address }}</p>
             </div>
+        </div>
+        <div class="text-end"> 
+            <a class="btn btn-outline-dark" href="{{url_for('sponsor_profile')}}">Update Profile</a> 
         </div>
     </div>
 

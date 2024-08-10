@@ -6,5 +6,19 @@ Click on each campaign to view campaign description
     - activate campaign
     - close campaign
 -->
+{% extends "layout.html" %}
 
-<h1>blah</h1>
+{% block content %}
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-9">
+            <h1 class="text-start">View all campaigns</h1>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-outline-dark text-end" href="{{ url_for('create_campaign') }}"> Create New Campaign</a> 
+        </div>
+    </div>
+
+    <!-- LIST OF ALL CAMPAIGNS WITH MODALS -->
+    
+
+{% endblock content %}

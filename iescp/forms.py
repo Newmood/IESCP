@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField, FileField, DateField, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField, FileField, DateField, IntegerField, DateTimeField ,ValidationError
 from wtforms.validators import DataRequired, Length, Email, EqualTo, URL, Optional
 from wtforms_alchemy import PhoneNumberField
 from iescp.models import *
@@ -110,3 +110,14 @@ class UpdateAccountSponsor(FlaskForm):
             user = CommonUser.query.filter_by(username=username.data).first()
             if user:
                 raise ValidationError('Username not available, please choose another.')
+            
+class NewCampaign(FlaskForm):
+    title = StringField("Title", validators=[DataRequired(), Length(min=10,max=150)])
+    description = TextAreaField("Description", validators=[DataRequired()])
+    budget = IntegerField("Budget (INR)", validators=[DataRequired()])
+    industry = StringField("Industry/Category", validators=[DataRequired()])
+    end_date = DateField("End date", format='%Y-%m-%d', validators=[DataRequired()])
+    status = SelectField("Visibility", choices=[('Public','Public'),('Private','Private')], validators=[DataRequired()])
+    date_posted = DateTimeField('date posted', default=datetime.now(timezone.utc))
+    submit = SubmitField('Post')
+

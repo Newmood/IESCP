@@ -1,0 +1,115 @@
+<!-- PAGE CONTENTS:
+List of all campaigns 
+Click on each campaign to view campaign description
+    - new ad request under this campagin
+    - edit campaign (and make active again)
+    - activate campaign
+    - close campaign
+-->
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="content-section">
+        <div class="text-start mb-4 ">
+            <h1 class="fs-4 mb-2"> Create new campaign</h1>
+        </div>
+        <hr>
+        
+        <form method="POST" action="{{ url_for('create_campaign') }}" enctype="multipart/form-data">
+            {{ new_camp.hidden_tag() }}
+
+            <div class="form-group row mb-3 align-items-center">
+                <div class="col-md-2"> {{ new_camp.title.label (class='form-label') }} </div>
+                <div class="col-md-10">
+                    {% if new_camp.title.errors %}
+                        {{ new_camp.title(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in new_camp.title.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ new_camp.title(class="form-control") }}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="form-group col-md-6">
+                    {{ new_camp.budget.label (class='form-label') }}
+                    {% if new_camp.budget.errors %}
+                        {{ new_camp.budget(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in new_camp.budget.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ new_camp.budget(class="form-control ") }}
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ new_camp.industry.label (class='form-label') }}
+                    {% if new_camp.industry.errors %}
+                        {{ new_camp.industry(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in new_camp.industry.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ new_camp.industry(class="form-control ") }}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                {{ new_camp.description.label (class='form-label') }}
+                {% if new_camp.description.errors %}
+                    {{ new_camp.description(class="form-control  is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in new_camp.description.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ new_camp.description(class="form-control ") }}
+                {% endif %}
+            </div>
+
+            <div class="row mb-3">
+                <div class="form-group col-md-6">
+                    {{ new_camp.end_date.label (class='form-label') }}
+                    {% if new_camp.end_date.errors %}
+                        {{ new_camp.end_date(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in new_camp.end_date.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ new_camp.end_date(class="form-control ") }}
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ new_camp.status.label (class='form-label') }}
+                    {% if new_camp.status.errors %}
+                        {{ new_camp.status(class="form-select  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in new_camp.status.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ new_camp.status(class="form-select ") }}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="pt-3 d-grid gap-2 col-2 mx-auto form-group">
+                {{ new_camp.submit(class="btn btn-outline-dark  py-2") }}
+            </div>
+        </form>       
+    </div>
+
+{% endblock content %}

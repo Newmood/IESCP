@@ -127,7 +127,8 @@ def logout():
 @app.route("/home")
 @login_required
 def home():
-    return render_template('index.html', title="Home" ,ads_posts= ads_posts)
+    posts = Post.query.all()
+    return render_template('index.html', title="Home" ,ads_posts= posts)
 
 
 # DASHBOARD PAGE ----------------------------
@@ -155,6 +156,21 @@ def campaign():
           return render_template("creator/02_creator_campaigns.html", title= "Campaigns")
      else:
           return redirect(url_for('home'))
+     
+@app.route("/campaign/create",  methods=['GET','POST'])
+@login_required
+@sponsor_required
+def create_campaign():
+     new_camp = NewCampaign()
+     if new_camp.validate_on_submit():
+          sponsor = Sponsor.query.filter_by(common_id=current_user.id).first()
+          post = Post(title= new_camp.title.data, description =new_camp.description.data, budget=new_camp.budget.data, industry=new_camp.industry.data, end_date= new_camp.end_date.data, user_id = sponsor.id, date_posted= new_camp.date_posted.data)
+          db.session.add(post)
+          db.session.commit()
+          flash('New campaign has been created','success')
+          return redirect(url_for('campaign'))
+     return render_template("sponsor/new_campaign.html", title= "Create campaign", new_camp=new_camp)
+
      
 # BROWSE PAGE ----------------------------
 @app.route("/browse")
