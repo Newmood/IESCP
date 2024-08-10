@@ -6,13 +6,16 @@
 {% block content %}
 
         {% for post in ads_posts %}
-            <article class="media content-section">
-                <div class="media-body">
+            <article class="d-flex content-section">
+                <div class="flex-shrink-0">
+                    <img src="{{ url_for('static', filename='images/profile_pics/'+ post.author.common_user.profile_pic) }}" alt="{{post.author.common_user.username}}'s profile image" class="rounded-circle account-img">
+                </div>
+                <div class="flex-grow-1 ms-3">
                     <div class="article-metadata"> 
-                        <a class="mr-2" href="#"> {{ post.author }}</a>
-                        <small class="text-muted"> {{ post.date_posted }}</small>
+                        <a class="mr-2 h5" href="#"> {{ post.author.common_user.username }}</a>
+                        <small class="text-muted"> {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
                     </div>
-                    <h2><a class="article-title" href="#"> {{ post.title }} </a></h2>
+                    <h2><a class="article-title" href="{{ url_for('post',post_id=post.id)}}"> {{ post.title }} </a></h2>
                     <p class="article-content"> {{ post.description }} </p>
                     <p class="article-content"> 
                         <span> Budget : {{ post.budget }}</span>

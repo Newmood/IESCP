@@ -70,7 +70,7 @@ a.article-title:hover {
     margin-bottom: 4px;
     color: blue;
     text-decoration: none;
-    /* border-bottom: 1px solid #c1c1c1 */
+    border-bottom: 1px solid #c1c1c1;
 }
   
 .article-metadata a:hover {

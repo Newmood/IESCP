@@ -1,0 +1,26 @@
+ {% extends "layout.html" %}
+ {% block content %}
+ 
+         
+    <article class="d-flex content-section">
+        <div class="flex-shrink-0">
+            <img src="{{ url_for('static', filename='images/profile_pics/'+ post.author.common_user.profile_pic) }}" alt="{{post.author.common_user.username}}'s profile image" class="rounded-circle account-img">
+        </div>
+        <div class="flex-grow-1 ms-3">
+            <div class="article-metadata"> 
+                <a class="mr-2 h5" href="#"> {{ post.author.common_user.username }}</a>
+                <small class="text-muted"> {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h2 class="article-title"> {{ post.title }} </h2>
+            <p class="article-content"> {{ post.description }} </p>
+            <p class="article-content"> 
+                <span> Budget : {{ post.budget }}</span>
+                <span> Industry : {{ post.industry }} </span>
+                <span> End Date : {{ post.end_date }} </span> 
+            </p>
+        </div>
+    </article>
+         
+ 
+ {% endblock content %}
+ 

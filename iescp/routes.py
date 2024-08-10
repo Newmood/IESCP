@@ -4,6 +4,7 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request
 from flask_login import login_user, current_user, logout_user, login_required
+from sqlalchemy.orm import joinedload
 from iescp.forms import *
 from iescp.models import *
 from iescp.decorators import creator_required, sponsor_required
@@ -112,12 +113,6 @@ def login():
                flash('Login unsuccessful. Please check credentials and try again.','danger')
      return render_template('login.html', title="Login", form=form)
 
-# @app.route("/register")
-# def register():
-#      creator_form = CreatorRegistrationForm()
-#      sponsor_form = SponsorRegistrationForm()
-#      return render_template('z_initial_register.html',title='register',creator_form=creator_form, sponsor_form=sponsor_form)
-
 
 @app.route("/logout")
 def logout():
@@ -127,8 +122,8 @@ def logout():
 @app.route("/home")
 @login_required
 def home():
-    posts = Post.query.all()
-    return render_template('index.html', title="Home" ,ads_posts= posts)
+     posts = Post.query.all()
+     return render_template('index.html', title="Home" ,ads_posts= posts)
 
 
 # DASHBOARD PAGE ----------------------------
@@ -156,7 +151,8 @@ def campaign():
           return render_template("creator/02_creator_campaigns.html", title= "Campaigns")
      else:
           return redirect(url_for('home'))
-     
+
+# CREATE CAMPAGIN
 @app.route("/campaign/create",  methods=['GET','POST'])
 @login_required
 @sponsor_required
@@ -171,6 +167,13 @@ def create_campaign():
           return redirect(url_for('campaign'))
      return render_template("sponsor/new_campaign.html", title= "Create campaign", new_camp=new_camp)
 
+#UPDATE CAMPAIGN
+@app.route("/campaign/edit-<post_id>")
+@login_required
+@sponsor_required
+def post(post_id):
+     post = Post.query.get_or_404(post_id)
+     return render_template('post.html',title=post.title, post=post)
      
 # BROWSE PAGE ----------------------------
 @app.route("/browse")

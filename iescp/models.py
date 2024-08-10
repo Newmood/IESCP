@@ -28,12 +28,12 @@ class CommonUser(db.Model,UserMixin):
 class Sponsor(db.Model, UserMixin):
      __tablename__ = 'sponsor'
      id = db.Column(db.Integer, primary_key=True)
-     common_id = db.Column(db.Integer, db.ForeignKey('commonuser.id'), nullable = False)
      company = db.Column(db.String(50), nullable = False)
      industry = db.Column(db.String(50), nullable=False)
      website= db.Column(db.String(120), nullable=False)
      company_address = db.Column(db.Text, nullable=False)
-     posts = db.relationship('Post', backref='author',lazy=True)
+     common_id = db.Column(db.Integer, db.ForeignKey('commonuser.id'), nullable = False)
+     common_user = db.relationship('CommonUser', backref='sponsor', uselist=False)
 
      def __repr__(self):
           return f"User('{self.common_id}')"
@@ -42,7 +42,6 @@ class Sponsor(db.Model, UserMixin):
 class Creator(db.Model, UserMixin):
      __tablename__ = 'creator'
      id = db.Column(db.Integer, primary_key=True)
-     common_id = db.Column(db.Integer, db.ForeignKey('commonuser.id'), nullable = False)
      social_link_1 = db.Column(db.String(120), nullable=False)
      social_link_2 = db.Column(db.String(120))
      social_link_3 = db.Column(db.String(120))
@@ -50,6 +49,8 @@ class Creator(db.Model, UserMixin):
      location= db.Column(db.String(100), nullable= False)
      dob = db.Column(db.DateTime, nullable=False)
      bio = db.Column(db.Text, nullable= False)
+     common_id = db.Column(db.Integer, db.ForeignKey('commonuser.id'), nullable = False)
+     common_user = db.relationship('CommonUser', backref='creator', uselist=False)
 
      def __repr__(self):
           return f"User('{self.common_id}')"
@@ -61,9 +62,10 @@ class Post(db.Model):
      description = db.Column(db.Text, nullable =False)
      budget = db.Column(db.String(20), nullable =False)
      industry = db.Column(db.String(20), nullable =False)
-     end_date = db.Column(db.String(20), nullable =False) # CHANGE TO DATETIME
+     end_date = db.Column(db.DateTime, nullable =False)
      user_id = db.Column(db.Integer,db.ForeignKey('sponsor.id'),nullable= False)
-     # add visbility
+     status = db.Column(db.String(20), nullable=False, default='Public')
+     author = db.relationship('Sponsor', backref='posts', lazy=True)
 
      def __repr__(self):
           return f"User('{self.title}','{self.date_posted}')"
