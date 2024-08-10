@@ -8,7 +8,7 @@
         </div>
         <div class="flex-grow-1 ms-3">
             <div class="article-metadata"> 
-                <a class="mr-2 h5" href="#"> {{ post.author.common_user.username }}</a>
+                <a class="mr-2 h5" href="{{ url_for('sponsor_view',username=post.author.common_user.username) }}"> {{ post.author.common_user.username }}</a>
                 <small class="text-muted"> {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             </div>
             <h2 class="article-title"> {{ post.title }} </h2>

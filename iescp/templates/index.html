@@ -5,14 +5,14 @@
 {% extends "layout.html" %}
 {% block content %}
 
-        {% for post in ads_posts %}
+        {% for post in ads_posts.items %}
             <article class="d-flex content-section">
                 <div class="flex-shrink-0">
                     <img src="{{ url_for('static', filename='images/profile_pics/'+ post.author.common_user.profile_pic) }}" alt="{{post.author.common_user.username}}'s profile image" class="rounded-circle account-img">
                 </div>
                 <div class="flex-grow-1 ms-3">
                     <div class="article-metadata justify-content-between"> 
-                        <a class="h5" href="#" style="margin-right: 1rem;"> {{ post.author.common_user.username }}</a>
+                        <a class="h5" href="{{ url_for('sponsor_view',username=post.author.common_user.username) }}" style="margin-right: 1rem;"> {{ post.author.common_user.username }}</a>
                         <small class="text-muted"> {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
                     </div>
                     <h3><a class="article-title h3" href="{{ url_for('post',post_id=post.id)}}"> {{ post.title }} </a></h3>
@@ -20,6 +20,17 @@
                     <p class="article-content"> {{ post.description }} </p>
                 </div>
             </article>
+        {% endfor %}
+        {% for page_num in ads_posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+                {% if ads_posts.page == page_num %}
+                    <a class="btn btn-dark mb-3" href="{{ url_for('home', page=page_num) }}"> {{ page_num }}</a>
+                {% else %}
+                    <a class="btn btn-outline-dark mb-3" href="{{ url_for('home', page=page_num) }}"> {{ page_num }}</a>
+                {% endif %}
+            {% else %}
+                ...
+            {% endif %}
         {% endfor %}
 
 {% endblock content %}

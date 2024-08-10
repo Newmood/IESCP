@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-9">
+            <h1 class="text-start h2">Posts by {{ user.username }}</h1>
+        </div>
+    </div>
+
+    <!-- LIST OF ALL CAMPAIGNS WITH MODALS -->
+    {% for post in ads_posts %}
+    <article class="d-flex content-section">
+        <div class="flex-grow-1 ms-3">
+            <div class="article-metadata"> 
+                <a class="mr-2 h5" href="{{ url_for('sponsor_view',username=post.author.common_user.username) }}"> {{ post.author.common_user.username }}</a>
+                <small class="text-muted"> {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h3><a class="article-title h3" href="{{ url_for('post',post_id=post.id)}}"> {{ post.title }} </a></h3>
+            <p class="article-content"> {{ post.description }} </p>
+            
+        </div>
+    </article>
+    {% endfor %}
+
+    {% for page_num in ads_posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if ads_posts.page == page_num %}
+                <a class="btn btn-dark mb-3" href="{{ url_for('sponsor_view', username=user.username, page=page_num) }}"> {{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-dark mb-3" href="{{ url_for('sponsor_view', username=user.username, page=page_num) }}"> {{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+
+{% endblock content %}

@@ -121,9 +121,18 @@ def logout():
 @app.route("/home")
 @login_required
 def home():
-     posts = Post.query.all()
+     page = request.args.get('page',default=1,type=int)
+     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=6)
      return render_template('index.html', title="Home" ,ads_posts= posts)
 
+@app.route("/user/sponsor/<string:username>")
+@login_required
+def sponsor_view(username):
+     page = request.args.get('page',default=1,type=int)
+     user = CommonUser.query.filter_by(username=username).first_or_404()
+     sponsor = Sponsor.query.filter_by(common_id=user.id).first_or_404()
+     posts = Post.query.filter_by(user_id=sponsor.id).order_by(Post.date_posted.desc()).paginate(page=page, per_page=6)
+     return render_template('sponsor/sponsor_view.html', title="Home" ,ads_posts= posts, user=user)
 
 # DASHBOARD PAGE ----------------------------
 @app.route("/dashboard")

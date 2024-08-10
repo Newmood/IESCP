@@ -19,19 +19,23 @@ Click on each campaign to view campaign description
     </div>
 
     <!-- LIST OF ALL CAMPAIGNS WITH MODALS -->
-    {% for post in ads_posts %}
-    <article class="d-flex content-section">
-        <div class="flex-grow-1 ms-3">
-            <div class="article-metadata"> 
-                <a class="mr-2 h5" href="#"> {{ post.author.common_user.username }}</a>
-                <small class="text-muted"> {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+    {% if ads_posts %}
+        {% for post in ads_posts %}
+        <article class="d-flex content-section">
+            <div class="flex-grow-1 ms-3">
+                <div class="article-metadata"> 
+                    <a class="mr-2 h5" href="{{ url_for('sponsor_view',username=post.author.common_user.username) }}"> {{ post.author.common_user.username }}</a>
+                    <small class="text-muted"> {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+                </div>
+                <h3><a class="article-title h3" href="{{ url_for('post',post_id=post.id)}}"> {{ post.title }} </a></h3>
+                <p class="article-content"> {{ post.description }} </p>
+                
             </div>
-            <h3><a class="article-title h3" href="{{ url_for('post',post_id=post.id)}}"> {{ post.title }} </a></h3>
-            <p class="article-content"> {{ post.description }} </p>
-            
-        </div>
-    </article>
-    {% endfor %}
+        </article>
+        {% endfor %}
+    {% else %}
+        <p class="h5">You have no campaign posts yet.</p>
+    {% endif%}
     
 
 {% endblock content %}
