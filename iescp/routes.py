@@ -2,7 +2,7 @@ import os
 import requests as rq
 import secrets
 from PIL import Image
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy.orm import joinedload
 from iescp.forms import *
@@ -165,15 +165,53 @@ def create_campaign():
           db.session.commit()
           flash('New campaign has been created','success')
           return redirect(url_for('campaign'))
-     return render_template("sponsor/new_campaign.html", title= "Create campaign", new_camp=new_camp)
+     return render_template("sponsor/new_campaign.html", title= "Create campaign", new_camp=new_camp, legend='Create New Campaign')
 
 #UPDATE CAMPAIGN
-@app.route("/campaign/edit-<post_id>")
+@app.route("/campaign/<post_id>")
 @login_required
-@sponsor_required
 def post(post_id):
      post = Post.query.get_or_404(post_id)
      return render_template('post.html',title=post.title, post=post)
+
+@app.route("/campaign/<post_id>/edit", methods=['GET','POST'])
+@login_required
+@sponsor_required
+def edit_post(post_id):
+     post = Post.query.get_or_404(post_id)
+     if post.author != current_user:
+          abort(403)
+     editform = NewCampaign()
+     if editform.validate_on_submit():
+          post.title = editform.title.data
+          post.budget = editform.budget.data
+          post.industry = editform.industry.data
+          post.description = editform.description.data
+          post.end_date = editform.end_date.data
+          post.status = editform.status.data
+          db.session.commit()
+          flash('Campaign post has been edited','success')
+          return redirect(url_for('post',post_id=post.id))
+     elif request.method == 'GET':
+          editform.title.data = post.title
+          editform.budget.data = post.budget
+          editform.industry.data = post.industry
+          editform.description.data = post.description
+          editform.end_date.data = post.end_date
+          editform.status.data = post.status
+     return render_template("sponsor/new_campaign.html", title= "Edit campaign", new_camp=editform, legend='Edit Campaign')
+
+@app.route("/campaign/<post_id>/delete", methods=['POST'])
+@login_required
+@sponsor_required
+def delete_post(post_id):
+     post = Post.query.get_or_404(post_id)
+     if post.author != current_user:
+          abort(403)
+     db.session.delete(post)
+     db.session.commit()
+     flash('Campaign post has been deleted','success')
+     return redirect(url_for('campaign'))
      
 # BROWSE PAGE ----------------------------
 @app.route("/browse")

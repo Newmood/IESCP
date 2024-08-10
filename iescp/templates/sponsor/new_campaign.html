@@ -11,11 +11,11 @@ Click on each campaign to view campaign description
 {% block content %}
     <div class="content-section">
         <div class="text-start mb-4 ">
-            <h1 class="fs-4 mb-2"> Create new campaign</h1>
+            <h1 class="fs-4 mb-2"> {{ legend }}</h1>
         </div>
         <hr>
         
-        <form method="POST" action="{{ url_for('create_campaign') }}" enctype="multipart/form-data">
+        <form method="POST" action="" enctype="multipart/form-data">
             {{ new_camp.hidden_tag() }}
 
             <div class="form-group row mb-3 align-items-center">

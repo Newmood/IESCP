@@ -20,7 +20,7 @@
                     <p class="article-content"> 
                         <span> Budget : {{ post.budget }}</span>
                         <span> Industry : {{ post.industry }} </span>
-                        <span> End Date : {{ post.end_date }} </span> 
+                        <span> End Date : {{ post.end_date.strftime('%Y-%m-%d') }} </span> 
                     </p>
                 </div>
             </article>
