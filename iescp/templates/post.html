@@ -25,7 +25,14 @@
                     <button type="button" class="btn btn-outline-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
                 </div>
             {% endif %}
+
+            {% if current_user.role == "Creator" %}
+                <div class="text-end">
+                    <button type="button" class="btn btn-outline-primary m-1" data-bs-toggle="modal" data-bs-target="#adrequestModal">Request Ad</button>
+                </div>
+            {% endif %}
         </div>
+        
     </article>
 
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

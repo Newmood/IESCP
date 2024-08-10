@@ -6,7 +6,7 @@ from flask import render_template, url_for, flash, redirect, request, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from iescp.forms import *
 from iescp.models import *
-from iescp.decorators import creator_required, sponsor_required
+from iescp.decorators import creator_required, sponsor_required, admin_required
 from iescp import app, db, bcrypt
 
 ads_posts= [
@@ -304,3 +304,15 @@ def sponsor_profile():
           update_form.company_address.data = sponsor_data.company_address
      return render_template('sponsor/sponsor_profile.html', title="Profile", sponsor_data=sponsor_data, update_form=update_form, image_file=image_file)
 
+
+
+# ADMIN STUFF------------------------
+@app.route("/admin")
+@admin_required
+def admin():
+     return render_template('admin/admin_dashboard.html')
+
+@app.route("/admin-stats")
+@admin_required
+def admin_stats():
+     return render_template('admin/admin_analytics.html')
