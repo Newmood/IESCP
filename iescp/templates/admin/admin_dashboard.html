@@ -4,4 +4,13 @@
 
 <h1>Welcome admin</h1>
 
+<div class="content-section">
+    <div class="d-grid gap-2 col-4 mx-auto">
+        <a class="btn btn-outline-dark" href="{{ url_for('admin_lists', item='creator') }}"> Creator List </a>
+        <a class="btn btn-outline-dark" href="{{ url_for('admin_lists', item='sponsor') }}"> Sponsor List </a>
+        <a class="btn btn-outline-dark" href="{{ url_for('admin_lists', item='campaign') }}"> Campaign List </a>
+        <a class="btn btn-outline-dark" href="{{ url_for('admin_lists', item='flagged') }}"> Flagged users </a>
+
+  </div>
+</div>
 {% endblock content2 %}

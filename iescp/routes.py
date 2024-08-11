@@ -247,7 +247,7 @@ def view_adreq(ad_id):
      adreq = AdRequest.query.get_or_404(ad_id)
      return render_template('ad_request.html',title="View ad", ad_post=adreq)
 
-@app.route("/accept-adrequest/<int:ad_id>-<int:value>", methods=['GET','POST'])
+@app.route("/reject-adrequest/<int:ad_id>-<int:value>", methods=['GET','POST'])
 @login_required
 def reject_adreq(ad_id,value):
      adreq = AdRequest.query.get_or_404(ad_id)
@@ -258,7 +258,7 @@ def reject_adreq(ad_id,value):
      flash('Ad request has been rejected','danger')
      return redirect(url_for('view_adreq', ad_id = ad_id))
 
-@app.route("/reject-adrequest/<int:ad_id>-<int:value>", methods=['GET','POST'])
+@app.route("/accept-adrequest/<int:ad_id>-<int:value>", methods=['GET','POST'])
 @login_required
 def accept_adreq(ad_id,value):
      adreq = AdRequest.query.get_or_404(ad_id)
@@ -360,6 +360,48 @@ def sponsor_profile():
 @admin_required
 def admin():
      return render_template('admin/admin_dashboard.html')
+
+@app.route("/admin/<string:item>")
+@admin_required
+def admin_lists(item):
+     if item=='creator':
+          creator_data = Creator.query.all()
+          return render_template('admin/admin_list.html',item=item, creator_data=creator_data)
+     elif item=='sponsor':
+          sponsor_data = Sponsor.query.all()
+          return render_template('admin/admin_list.html',item=item, sponsor_data=sponsor_data)
+     elif item=='campaign':
+          campaign_data = Post.query.all()
+          return render_template('admin/admin_list.html',item=item, campaign_data=campaign_data)
+     elif item=='flagged':
+          users = CommonUser.query.filter_by(flag='yes').all()
+          return render_template('admin/admin_list.html',item=item, users=users)
+     return render_template('admin/admin_list.html',item=item)
+
+@app.route("/admin/<string:item>/<int:item_id>")
+@admin_required
+def admin_flag(item, item_id):
+     if item=="creator":
+          creator = Creator.query.get_or_404(item_id)
+          creator.common_user.flag = 'Yes'
+          db.session.commit()
+          return redirect(url_for('admin_lists',item=item))
+     elif item=="sponsor":
+          sponsor = Sponsor.query.get_or_404(item_id)
+          sponsor.common_user.flag = 'Yes'
+          db.session.commit()
+          return redirect(url_for('admin_lists',item=item))
+     elif item=="campaign":
+          post = Post.query.get_or_404(item_id)
+          post.flag = 'Yes'
+          db.session.commit()
+          return redirect(url_for('admin_lists',item=item))
+     elif item=="flagged":
+          user = CommonUser.query.get_or_404(item_id)
+          user.flag = 'No'
+          db.session.commit()
+          return redirect(url_for('admin_lists',item=item))
+
 
 @app.route("/admin-stats")
 @admin_required

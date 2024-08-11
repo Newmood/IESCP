@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+{% block content2 %}
+
+<div class="text-center mb-5">
+    <h1 class="h1"> List for {{item}} </h1>
+</div>
+
+{% if creator_data %}
+    <table class="table table-hover table-light">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Username</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Current flag</th>
+                <th scope="col"> Set flag</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for creator in creator_data %}
+                <tr>
+                    <th scope="col"> {{ creator.common_user.id }} </th>
+                    <th scope="col"> {{creator.common_user.username}} </th>
+                    <th scope="col"> {{creator.common_user.firstname}} {{creator.common_user.lastname}} </th>
+                    <th scope="col"> {{creator.common_user.email}} </th>
+                    <th scope="col"> {{creator.common_user.flag}} </th>
+                    <th scope="col"> <a href="" class="btn btn-outline-danger btn-sm"> Flag</a> </th>
+
+                </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+{% endif %}
+
+{% if sponsor_data %}
+    <table class="table table-hover table-light">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Username</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Current flag</th>
+                <th scope="col"> Set flag</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sponsor in sponsor_data %}
+                <tr>
+                    <th scope="col"> {{ sponsor.common_user.id }} </th>
+                    <th scope="col"> {{sponsor.common_user.username}} </th>
+                    <th scope="col"> {{sponsor.common_user.firstname}} {{sponsor.common_user.lastname}} </th>
+                    <th scope="col"> {{sponsor.common_user.email}} </th>
+                    <th scope="col"> {{sponsor.common_user.flag}} </th>
+                    <th scope="col"> <a href="{{url_for('admin_flag',item='sponsor',item_id=sponsor.id)}}" class="btn btn-outline-danger btn-sm"> Flag</a> </th>
+
+                </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+{% endif %}
+
+{% if campaign_data %}
+    <table class="table table-hover table-light">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Post title</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Author</th>
+                <th scope="col">Budget</th>
+                <th scope="col"> Set flag</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in campaign_data %}
+                <tr>
+                    <th scope="col"> {{ post.id }} </th>
+                    <th scope="col"> {{ post.title }} </th>
+                    <th scope="col"> {{ post.end_date.strftime('%Y-%m-%d') }} </th>
+                    <th scope="col"> {{ post.author.common_user.username }} </th>
+                    <th scope="col"> {{ post.budget }} </th>
+                    <th scope="col"> <a href="" class="btn btn-outline-danger btn-sm"> Flag</a> </th>
+
+                </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+{% endif %}
+
+{% if users %}
+    <table class="table table-hover table-light">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Username</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+                <th scope="col"> Set flag</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <th scope="col"> {{ user.id }} </th>
+                    <th scope="col"> {{ user.username }} </th>
+                    <th scope="col"> {{ user.firstname }} {{ user.lastname }} </th>
+                    <th scope="col"> {{ user.email }} </th>
+                    <th scope="col"> {{ user.role }} </th>
+                    <th scope="col"> <a href="{{url_for('admin_flag',item='flagged',item_id=user.id)}}" class="btn btn-outline-primary btn-sm"> Unflag</a> </th>
+
+                </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+{% endif %}
+
+{% endblock content2 %}
