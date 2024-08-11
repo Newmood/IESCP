@@ -121,3 +121,16 @@ class NewCampaign(FlaskForm):
     date_posted = DateTimeField('date posted', default=datetime.now(timezone.utc))
     submit = SubmitField('Post')
 
+class SponsorAdRequestForm(FlaskForm):
+    campaign_id = SelectField('Campaign', coerce=int, validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    budget = IntegerField("Budget (INR)", validators=[DataRequired()])
+    completion_date = DateField('Expected completion date', format='%Y-%m-%d', validators=[DataRequired()])
+    submit =  SubmitField('Send request')
+
+class CreatorAdRequestForm(FlaskForm):
+    description = TextAreaField('Description', validators=[DataRequired()])
+    budget = IntegerField("Budget (INR)", validators=[DataRequired()])
+    completion_date = DateField('Expected completion date', format='%Y-%m-%d', validators=[DataRequired()])
+    submit =  SubmitField('Send request')
+    

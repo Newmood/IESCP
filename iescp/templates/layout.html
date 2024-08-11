@@ -82,12 +82,20 @@
             
                 <div class="col-md-3">
                     <div class="content-section sticky-top">
-                        <h3> Sidebar </h3>
-                        <p class='text-muted'> To decide what to put here
+                        <h3> Hello, {{ current_user.username }} ! </h3>
+                        <p class='text-muted'> What's on your mind today?
                         <ul class="list-group">
-                            <li class="list-group-item list-group-item-light">Latest Posts</li>
-                            <li class="list-group-item list-group-item-light"> Check performance analytics </li>
-                            <li class="list-group-item list-group-item-light"> Browse creators/sponsors </li>
+                            {% if current_user.role == "Creator" %}
+                            <li class="list-group-item list-group-item-action list-group-item-light"> <a href="{{ url_for('campaign') }}"> See all ad requests </a> </li>
+                            <li class="list-group-item list-group-item-action list-group-item-light"> <a href="{{ url_for('browse') }}"> Browse campaigns </a> </li>
+                            <li class="list-group-item list-group-item-action list-group-item-light"> Check analytics </li>
+                            {% endif %}
+                            {% if current_user.role == "Sponsor" %}
+                            <li class="list-group-item list-group-item-action list-group-item-light"> <a href="#"> See all ad requests </a> </li>
+                            <li class="list-group-item list-group-item-action list-group-item-light"> <a href="{{ url_for('browse') }}"> Browse creators </a> </li>
+                            <li class="list-group-item list-group-item-action list-group-item-light"> Check analytics </li>
+                            {% endif %}
+
                         </ul>
                         </p>
                         <small class="text-muted">&copy; IESCP, 22f100419</small>

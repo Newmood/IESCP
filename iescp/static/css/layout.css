@@ -94,3 +94,12 @@ a.article-title:hover {
 .account-heading {
     font-size: 2.5rem;
 }
+
+.list-group a{
+    color: #a14055;
+}
+
+.list-group a:hover{
+    color: #a14055;
+    text-decoration: underline;
+}

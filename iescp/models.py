@@ -69,3 +69,17 @@ class Post(db.Model):
 
      def __repr__(self):
           return f"User('{self.title}','{self.date_posted}')"
+     
+class AdRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    sender_id = db.Column(db.Integer, db.ForeignKey('sponsor.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('creator.id'), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    budget = db.Column(db.String(20), nullable=False)
+    expected_completion_date = db.Column(db.DateTime, nullable=False)
+    status = db.Column(db.String(20), nullable=False, default='pending')
+
+    post = db.relationship('Post', backref='ad_requests')
+    sender = db.relationship('Sponsor', backref='sent_ad_requests')
+    receiver = db.relationship('Creator', backref='received_ad_requests')
