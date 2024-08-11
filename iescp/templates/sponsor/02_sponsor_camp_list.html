@@ -17,14 +17,13 @@ Click on each campaign to view campaign description
             <a class="btn btn-outline-dark text-end" href="{{ url_for('create_campaign') }}"> Create New Campaign</a> 
         </div>
     </div>
-
     <!-- LIST OF ALL CAMPAIGNS WITH MODALS -->
-    {% if ads_posts %}
+    {% if ads_posts.total != 0 %}
         {% for post in ads_posts %}
         <article class="d-flex content-section">
             <div class="flex-grow-1 ms-3">
                 <div class="article-metadata"> 
-                    <a class="mr-2 h5" href="{{ url_for('sponsor_view',username=post.author.common_user.username) }}"> {{ post.author.common_user.username }}</a>
+                    <a class="mr-2 h5" href="{{ url_for('sponsor_view',username=post.author.common_user.username) }}" style="margin-right: 1rem;"> {{ post.author.common_user.username }}</a>
                     <small class="text-muted"> {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
                 </div>
                 <h3><a class="article-title h3" href="{{ url_for('post',post_id=post.id)}}"> {{ post.title }} </a></h3>
@@ -33,9 +32,23 @@ Click on each campaign to view campaign description
             </div>
         </article>
         {% endfor %}
+
+        {% for page_num in ads_posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+                {% if ads_posts.page == page_num %}
+                    <a class="btn btn-dark mb-3" href="{{ url_for('home', page=page_num) }}"> {{ page_num }}</a>
+                {% else %}
+                    <a class="btn btn-outline-dark mb-3" href="{{ url_for('home', page=page_num) }}"> {{ page_num }}</a>
+                {% endif %}
+            {% else %}
+                ...
+            {% endif %}
+        {% endfor %}
+
     {% else %}
         <p class="h5">You have no campaign posts yet.</p>
     {% endif%}
     
+
 
 {% endblock content %}

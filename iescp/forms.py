@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
 from flask_login import current_user
@@ -115,10 +116,10 @@ class NewCampaign(FlaskForm):
     title = StringField("Title", validators=[DataRequired(), Length(min=10,max=150)])
     description = TextAreaField("Description", validators=[DataRequired()])
     budget = IntegerField("Budget (INR)", validators=[DataRequired()])
-    industry = StringField("Industry/Category", validators=[DataRequired()])
+    industry = SelectField("Industry/Category", choices=[('Technology',"Technology"),('Fitness','Fitness'),('Fashion','Fashion'),('Beauty','Beauty'),('Gaming','Gaming'),('Educational','Educational'),('Travel','Travel'),('FMCG','FMCG'),('Finance','Finance'),('Other','Other')], validators=[DataRequired()])
     end_date = DateField("End date", format='%Y-%m-%d', validators=[DataRequired()])
     status = SelectField("Visibility", choices=[('Public','Public'),('Private','Private')], validators=[DataRequired()])
-    date_posted = DateTimeField('date posted', default=datetime.now(timezone.utc))
+    date_posted = DateTimeField('date posted', default= lambda: datetime.now(timezone.utc))
     submit = SubmitField('Post')
 
 class SponsorAdRequestForm(FlaskForm):

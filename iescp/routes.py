@@ -122,7 +122,9 @@ def dashboard():
 @login_required
 def campaign():
      if current_user.role == "Sponsor":
-          posts = Post.query.filter_by(author=current_user).all()
+          page = request.args.get('page',default=1,type=int)
+          sponsor = Sponsor.query.filter_by(common_id = current_user.id).first()
+          posts = Post.query.filter_by(author = sponsor).order_by(Post.date_posted.desc()).paginate(page=page, per_page=6)
           return render_template("sponsor/02_sponsor_camp_list.html", title= "Campaigns", ads_posts=posts)
      elif current_user.role == "Creator":
           return render_template("creator/02_creator_campaigns.html", title= "Campaigns")
@@ -156,7 +158,7 @@ def post(post_id):
 @sponsor_required
 def edit_post(post_id):
      post = Post.query.get_or_404(post_id)
-     if post.author != current_user:
+     if post.author.common_user != current_user:
           abort(403)
      editform = NewCampaign()
      if editform.validate_on_submit():
@@ -183,7 +185,7 @@ def edit_post(post_id):
 @sponsor_required
 def delete_post(post_id):
      post = Post.query.get_or_404(post_id)
-     if post.author != current_user:
+     if post.author.common_user != current_user:
           abort(403)
      db.session.delete(post)
      db.session.commit()

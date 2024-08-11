@@ -51,14 +51,14 @@ Click on each campaign to view campaign description
                 <div class="form-group col-md-6">
                     {{ new_camp.industry.label (class='form-label') }}
                     {% if new_camp.industry.errors %}
-                        {{ new_camp.industry(class="form-control  is-invalid") }}
+                        {{ new_camp.industry(class="form-select  is-invalid") }}
                         <div class="invalid-feedback">
                             {% for error in new_camp.industry.errors %}
                                 <span>{{ error }}</span>
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ new_camp.industry(class="form-control ") }}
+                        {{ new_camp.industry(class="form-select ") }}
                     {% endif %}
                 </div>
             </div>

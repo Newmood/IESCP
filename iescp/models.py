@@ -78,7 +78,7 @@ class AdRequest(db.Model):
     description = db.Column(db.Text, nullable=False)
     budget = db.Column(db.String(20), nullable=False)
     expected_completion_date = db.Column(db.DateTime, nullable=False)
-    status = db.Column(db.String(20), nullable=False, default='pending')
+    status = db.Column(db.String(20), nullable=False, default='pending') # pending, if accepted: in progress, then completed, if rejected: rejected
 
     post = db.relationship('Post', backref='ad_requests')
     sender = db.relationship('Sponsor', backref='sent_ad_requests')
