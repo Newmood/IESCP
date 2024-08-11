@@ -32,12 +32,52 @@
             <div class="col-md-6">
                 <div class="content-section">
                     <h2 class="fs-4"> Active Campaigns</h2>
+                    {% for post in ads_posts %}
+                        <article class="d-flex content-section">
+                            <div class="flex-grow-1 ms-3">
+                                <div class="article-metadata justify-content-between"> 
+                                    <a class="h6" href="{{ url_for('sponsor_view',username=post.author.common_user.username) }}" style="margin-right: 1rem;"> {{ post.author.common_user.username }}</a>
+                                    <small class="text-muted"> {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+                                </div>
+                                <p><a class="article-title h5" href="{{ url_for('post',post_id=post.id)}}"> {{ post.title }} </a></p>
+                                <p class="article-content"> {{ post.description }} </p>
+                            </div>
+                        </article>
+                    {% endfor %}
+                    <div class="text-end">
+                        <a href="{{ url_for('campaign') }}" >See more</a>
+                    </div>
                 </div>
             </div>
         
             <div class="col-md-6">
                 <div class="content-section">
                     <h2 class="fs-4"> New requests </h2>
+                        {% for ad_post in ads_rec %}
+                            <article class="d-flex content-section">
+                                <div class="flex-grow-1 ms-3">
+                                    <div class="article-metadata"> 
+                                        <a class="mr-2" href="{{ url_for('view_adreq', ad_id=ad_post.id)}}" style="margin-right: 1rem;"> {{ ad_post.post.title }}</a>
+                                        <small class="text-muted"> {{ ad_post.sender.username }}</small>
+                                    </div>
+                                    <p class="article-content"> {{ ad_post.description }} </p>
+                                </div>
+                                <div class="flex-shrink-0 mt-3">
+                                    {% if ad_post.status=='pending' %}
+                                        <button type="button" class="btn btn-warning" disabled> Pending </button>
+                                    {% endif %}
+                                    {% if ad_post.status=='accepted' %}
+                                        <button type="button" class="btn btn-success" disabled> Accepted </button>
+                                    {% endif %}
+                                    {% if ad_post.status=='rejected' %}
+                                        <button type="button" class="btn btn-danger" disabled> Rejected </button>
+                                    {% endif %}
+                                </div>
+                            </article>
+                        {% endfor %}
+                        <div class="text-end">
+                            <a href="{{ url_for('sponsor_adreq_list') }}" >See more</a>
+                        </div>
                 </div>
             </div>
         </div>

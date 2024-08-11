@@ -109,25 +109,34 @@ def dashboard():
      image_file = url_for('static',filename='images/profile_pics/'+current_user.profile_pic)
      if current_user.role == "Sponsor":
           sponsor_data = Sponsor.query.filter_by(common_id=current_user.id).first()
-          return render_template("sponsor/01_sponsor_dashboard.html", title= "Dashboard", sponsor_data = sponsor_data, image_file=image_file)
+          posts = Post.query.filter_by(author = sponsor_data).order_by(Post.date_posted.desc()).limit(2)
+          rec_adreq = AdRequest.query.filter_by(receiver_id = current_user.id).all()
+          return render_template("sponsor/01_sponsor_dashboard.html", title= "Dashboard", sponsor_data = sponsor_data, image_file=image_file, ads_posts=posts, ads_rec = rec_adreq)
      elif current_user.role == "Creator":
           creator_data = Creator.query.filter_by(common_id=current_user.id).first()
           return render_template("creator/01_creator_dashboard.html", title= "Dashboard", creator_data=creator_data, image_file=image_file)
      else:
           return redirect(url_for('home'))
      
+@app.route("/sponsor-ad-requests")
+@login_required
+@sponsor_required
+def sponsor_adreq_list():
+     return render_template("sponsor/sponsor_adreq_list.html")
 
 # CAMPAIGN PAGE ----------------------------
 @app.route("/campaign")
 @login_required
 def campaign():
+     page = request.args.get('page',default=1,type=int)
      if current_user.role == "Sponsor":
-          page = request.args.get('page',default=1,type=int)
           sponsor = Sponsor.query.filter_by(common_id = current_user.id).first()
           posts = Post.query.filter_by(author = sponsor).order_by(Post.date_posted.desc()).paginate(page=page, per_page=6)
           return render_template("sponsor/02_sponsor_camp_list.html", title= "Campaigns", ads_posts=posts)
      elif current_user.role == "Creator":
-          return render_template("creator/02_creator_campaigns.html", title= "Campaigns")
+          sent_adreq = AdRequest.query.filter_by(sender_id = current_user.id).paginate(page=page,per_page=6)
+          rec_adreq = AdRequest.query.filter_by(receiver_id = current_user.id).paginate(page=page,per_page=6)
+          return render_template("creator/02_creator_campaigns.html", title= "Campaigns", ads_sent=sent_adreq, ads_rec = rec_adreq) 
      else:
           return redirect(url_for('home'))
 
@@ -193,12 +202,49 @@ def delete_post(post_id):
      return redirect(url_for('campaign'))
 
 # AD REQUEST SECTION =======================================
-@app.route("/create-adrequest/<int:post_id>")
+@app.route("/create-adrequest/<int:post_id>",methods=['GET','POST'])
 @login_required
 @creator_required
 def new_creatoradreq(post_id):
      new_adrequest = CreatorAdRequestForm()
+     if new_adrequest.validate_on_submit():
+          post = Post.query.get_or_404(post_id)
+          adrequest = AdRequest(post_id=post_id, sender_id = current_user.id, receiver_id = post.author.common_user.id, description= new_adrequest.description.data, expected_completion_date=new_adrequest.completion_date.data, budget= new_adrequest.budget.data)
+          db.session.add(adrequest)
+          db.session.commit()
+          flash("Ad request sent to sponsor.",'success')
+          return redirect(url_for('campaign'))
      return render_template("creator/new_adreq.html", title="New Ad Request", new_adreq=new_adrequest, post_id=post_id)
+
+@app.route("/view-adrequest/<int:ad_id>")
+@login_required
+def view_adreq(ad_id):
+     adreq = AdRequest.query.get_or_404(ad_id)
+     accept_form = AcceptAdRequestForm()
+     reject_form = RejectAdRequestForm()
+     return render_template('ad_request.html',title="View ad", ad_post=adreq, accept_form=accept_form, reject_form=reject_form)
+
+@app.route("/accept-adrequest/<int:ad_id>-<int:value>", methods=['GET','POST'])
+@login_required
+def reject_adreq(ad_id,value):
+     adreq = AdRequest.query.get_or_404(ad_id)
+     if adreq.receiver != current_user:
+          abort(403)
+     adreq.status = 'rejected'
+     db.session.commit()
+     flash('Ad request has been rejected','danger')
+     return redirect(url_for('view_adreq', ad_id = ad_id))
+
+@app.route("/reject-adrequest/<int:ad_id>-<int:value>", methods=['GET','POST'])
+@login_required
+def accept_adreq(ad_id,value):
+     adreq = AdRequest.query.get_or_404(ad_id)
+     if adreq.receiver != current_user:
+          abort(403)
+     adreq.status = 'accepted'
+     db.session.commit()
+     flash('Ad request has been accepted','success')
+     return redirect(url_for('view_adreq', ad_id = ad_id))
 
 # BROWSE PAGE ----------------------------
 @app.route("/browse")

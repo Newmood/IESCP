@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<article class="d-flex content-section">
+    <div class="flex-grow-1 ms-3">
+        <div class="article-metadata"> 
+            <p class="h3">Campaign Post : <a class="mr-2" href="{{ url_for('post', post_id=ad_post.post.id)}}" style="margin-right: 1rem;"> {{ ad_post.post.title }}</a></p>
+            <p class="text-muted lead"> Sender : {{ad_post.sender.username }}, Receiver : {{ ad_post.receiver.username }} </p>
+        </div>
+        <div class="article-content">
+            <p> Desription : {{ ad_post.description }} </p>
+            <p> 
+                <span> Budget : {{ ad_post.budget }}</span>
+                <span> End Date : {{ ad_post.expected_completion_date.strftime('%Y-%m-%d') }} </span>
+            </p>
+        </div>
+        
+        {% if ad_post.receiver == current_user%}
+            {% if ad_post.status == 'pending' %}
+                <div class="text-end gap-2">
+                    <a href="{{ url_for('accept_adreq', ad_id=ad_post.id, value='1') }}" class="btn btn-outline-primary">Accept</a>
+                    <a href="{{ url_for('reject_adreq', ad_id=ad_post.id, value='0') }}" class="btn btn-outline-danger">Reject</a>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="flex-shrink-0 mt-3">
+        {% if ad_post.status=='pending' %}
+            <button type="button" class="btn btn-warning" disabled> Pending </button>
+        {% endif %}
+        {% if ad_post.status=='accepted' %}
+            <button type="button" class="btn btn-success" disabled> Accepted </button>
+        {% endif %}
+        {% if ad_post.status=='rejected' %}
+            <button type="button" class="btn btn-danger" disabled> Rejected </button>
+        {% endif %}
+    </div>
+</article>
+        
+
+{% endblock content %}
