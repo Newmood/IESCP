@@ -191,7 +191,15 @@ def delete_post(post_id):
      db.session.commit()
      flash('Campaign post has been deleted','success')
      return redirect(url_for('campaign'))
-     
+
+# AD REQUEST SECTION =======================================
+@app.route("/create-adrequest/<int:post_id>")
+@login_required
+@creator_required
+def new_creatoradreq(post_id):
+     new_adrequest = CreatorAdRequestForm()
+     return render_template("creator/new_adreq.html", title="New Ad Request", new_adreq=new_adrequest, post_id=post_id)
+
 # BROWSE PAGE ----------------------------
 @app.route("/browse")
 @login_required

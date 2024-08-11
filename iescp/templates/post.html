@@ -28,7 +28,7 @@
 
             {% if current_user.role == "Creator" %}
                 <div class="text-end">
-                    <button type="button" class="btn btn-outline-primary m-1" data-bs-toggle="modal" data-bs-target="#adrequestModal">Request Ad</button>
+                    <a class="btn btn-outline-primary m-1" href="{{ url_for('new_creatoradreq',post_id=post.id)}}">Request Ad</a>
                 </div>
             {% endif %}
         </div>
