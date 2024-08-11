@@ -2,6 +2,7 @@ import os
 import requests as rq
 import secrets
 from PIL import Image
+from sqlalchemy import or_
 from flask import render_template, url_for, flash, redirect, request, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from iescp.forms import *
@@ -113,8 +114,11 @@ def dashboard():
           rec_adreq = AdRequest.query.filter_by(receiver_id = current_user.id).all()
           return render_template("sponsor/01_sponsor_dashboard.html", title= "Dashboard", sponsor_data = sponsor_data, image_file=image_file, ads_posts=posts, ads_rec = rec_adreq)
      elif current_user.role == "Creator":
-          creator_data = Creator.query.filter_by(common_id=current_user.id).first()
-          return render_template("creator/01_creator_dashboard.html", title= "Dashboard", creator_data=creator_data, image_file=image_file)
+          newreq = request.args.get('newreq',default=1,type=int)
+          creator_data = Creator.query.filter_by(common_id = current_user.id).first()
+          rec_adreq = AdRequest.query.filter_by(receiver_id = current_user.id).filter_by(status='pending').paginate(page=newreq,per_page=4)
+          all_adreq = AdRequest.query.filter(or_(AdRequest.sender_id == current_user.id, AdRequest.receiver_id == current_user.id )).limit(3)
+          return render_template("creator/01_creator_dashboard.html", title= "Dashboard", creator_data=creator_data, image_file=image_file, rec_adreq=rec_adreq, all_adreq=all_adreq)
      else:
           return redirect(url_for('home'))
      
@@ -122,20 +126,26 @@ def dashboard():
 @login_required
 @sponsor_required
 def sponsor_adreq_list():
-     return render_template("sponsor/sponsor_adreq_list.html")
+     senpage = request.args.get('senpage',default=1,type=int)
+     recpage = request.args.get('recpage',default=1,type=int)
+     sent_adreq = AdRequest.query.filter_by(sender_id = current_user.id).paginate(page=senpage,per_page=6)
+     all_adreq = AdRequest.query.filter_by(receiver_id = current_user.id).paginate(page=recpage,per_page=6)
+     return render_template("sponsor/sponsor_adreq_list.html",ads_sent=sent_adreq, all_adreq=all_adreq)
 
 # CAMPAIGN PAGE ----------------------------
 @app.route("/campaign")
 @login_required
 def campaign():
-     page = request.args.get('page',default=1,type=int)
      if current_user.role == "Sponsor":
+          page = request.args.get('senpage',default=1,type=int)
           sponsor = Sponsor.query.filter_by(common_id = current_user.id).first()
           posts = Post.query.filter_by(author = sponsor).order_by(Post.date_posted.desc()).paginate(page=page, per_page=6)
           return render_template("sponsor/02_sponsor_camp_list.html", title= "Campaigns", ads_posts=posts)
      elif current_user.role == "Creator":
-          sent_adreq = AdRequest.query.filter_by(sender_id = current_user.id).paginate(page=page,per_page=6)
-          rec_adreq = AdRequest.query.filter_by(receiver_id = current_user.id).paginate(page=page,per_page=6)
+          senpage = request.args.get('senpage',default=1,type=int)
+          recpage = request.args.get('recpage',default=1,type=int)
+          sent_adreq = AdRequest.query.filter_by(sender_id = current_user.id).paginate(page=senpage,per_page=6)
+          rec_adreq = AdRequest.query.filter_by(receiver_id = current_user.id).paginate(page=recpage,per_page=6)
           return render_template("creator/02_creator_campaigns.html", title= "Campaigns", ads_sent=sent_adreq, ads_rec = rec_adreq) 
      else:
           return redirect(url_for('home'))
@@ -216,13 +226,27 @@ def new_creatoradreq(post_id):
           return redirect(url_for('campaign'))
      return render_template("creator/new_adreq.html", title="New Ad Request", new_adreq=new_adrequest, post_id=post_id)
 
+@app.route("/send-adrequest/<int:creator_id>",methods=['GET','POST'])
+@login_required
+@sponsor_required
+def new_sponsoradreq(creator_id):
+     new_adrequest = SponsorAdRequestForm()
+     sponsor = Sponsor.query.filter_by(common_id=current_user.id).first()
+     posts = Post.query.filter_by(author=sponsor).all()
+     new_adrequest.campaign_id.choices=[(post.id,post.title) for post in posts]
+     if new_adrequest.validate_on_submit():
+          adrequest = AdRequest(post_id=new_adrequest.campaign_id.data, sender_id = current_user.id, receiver_id = creator_id, description= new_adrequest.description.data, expected_completion_date=new_adrequest.completion_date.data, budget= new_adrequest.budget.data)
+          db.session.add(adrequest)
+          db.session.commit()
+          flash("Ad request sent to creator.",'success')
+          return redirect(url_for('sponsor_adreq_list'))
+     return render_template("sponsor/snew_adreq.html", title="New Ad Request", new_adreq=new_adrequest, creator_id=creator_id)
+
 @app.route("/view-adrequest/<int:ad_id>")
 @login_required
 def view_adreq(ad_id):
      adreq = AdRequest.query.get_or_404(ad_id)
-     accept_form = AcceptAdRequestForm()
-     reject_form = RejectAdRequestForm()
-     return render_template('ad_request.html',title="View ad", ad_post=adreq, accept_form=accept_form, reject_form=reject_form)
+     return render_template('ad_request.html',title="View ad", ad_post=adreq)
 
 @app.route("/accept-adrequest/<int:ad_id>-<int:value>", methods=['GET','POST'])
 @login_required
@@ -251,7 +275,8 @@ def accept_adreq(ad_id,value):
 @login_required
 def browse():
      if current_user.role == "Sponsor":
-          return render_template("sponsor/03_browse_creator.html", title= "Browse")
+          creators = Creator.query.all()
+          return render_template("sponsor/03_browse_creator.html", title= "Browse",creators_list=creators)
      elif current_user.role == "Creator":
           creator_data = Creator.query.filter_by(common_id=current_user.id).first()
           return render_template("creator/03_browse_camps.html", title= "Browse", creator_data = creator_data)

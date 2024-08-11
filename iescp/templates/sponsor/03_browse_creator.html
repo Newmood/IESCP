@@ -3,6 +3,27 @@
 
 {% extends "layout.html" %}
 {% block content %}
+    <h2 class="h3"> Browse creators </h2>
+
+    {% for user in creators_list%}
+        <article class="d-flex content-section">
+            <div class="flex-shrink-0">
+                <img src="{{ url_for('static', filename='images/profile_pics/'+ user.common_user.profile_pic) }}" alt="{{user.common_user.username}}'s profile image" class="rounded-circle account-img" style="width:80px;height:80px">
+                
+            </div>
+            <div class="flex-grow-1 ms-3">
+                <div class="article-metadata justify-content-between"> 
+                    <a class="h5" href="#" style="margin-right: 1rem;"> {{ user.common_user.firstname }} {{ user.common_user.lastname }}</a>
+                    <small class="text-muted"> {{ user.common_user.username }}</small>
+                </div>
+                <a href="{{ user.social_link_1 }}" target="_blank"> {{ user.social_link_1 }}</a>
+                <p class="article-content"> {{ user.category }} </p>
+                <div class="text-end">
+                    <a href="{{ url_for('new_sponsoradreq',creator_id=user.common_user.id)}}" class="btn btn-outline-primary btn-sm"> Request Ad</a>
+                </div>
+            </div>
+        </article>
+    {% endfor %}
 
 
 {% endblock content %}

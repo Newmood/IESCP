@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="content-section">
+        <div class="text-start">
+            <h1 class="fs-4"> New Ad Request</h1>
+        </div>
+        <hr>
+        
+        <form method="POST" action="" enctype="multipart/form-data">
+            {{ new_adreq.hidden_tag() }}
+
+            <div class="form-group mb-3">
+                {{ new_adreq.description.label (class='form-label') }}
+                {% if new_adreq.description.errors %}
+                    {{ new_adreq.description(class="form-control  is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in new_adreq.description.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ new_adreq.description(class="form-control ") }}
+                {% endif %}
+            </div>
+
+            <div class="row mb-3">
+                <div class="form-group col-md-6">
+                    {{ new_adreq.completion_date.label (class='form-label') }}
+                    {% if new_adreq.completion_date.errors %}
+                        {{ new_adreq.completion_date(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in new_adreq.completion_date.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ new_adreq.completion_date(class="form-control ") }}
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ new_adreq.budget.label (class='form-label') }}
+                    {% if new_adreq.budget.errors %}
+                        {{ new_adreq.budget(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in new_adreq.budget.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ new_adreq.budget(class="form-control ") }}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group row mb-3 align-items-center">
+                <div class="col-md-2"> {{ new_adreq.campaign_id.label (class='form-label') }} </div>
+                <div class="col-md-10">
+                    {% if new_adreq.campaign_id.errors %}
+                        {{ new_adreq.campaign_id(class="form-select is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in new_adreq.campaign_id.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ new_adreq.campaign_id(class="form-select") }}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="pt-3 d-grid gap-2 col-2 mx-auto form-group">
+                {{ new_adreq.submit(class="btn btn-outline-dark  py-2") }}
+            </div>
+        </form>       
+    </div>
+
+{% endblock content %}

@@ -13,7 +13,7 @@
                     <article class="d-flex content-section">
                         <div class="flex-grow-1 ms-3">
                             <div class="article-metadata"> 
-                                <a class="mr-2 h5" href="{{ url_for('post', post_id=ad_post.post.id)}}" style="margin-right: 1rem;"> {{ ad_post.post.title }}</a>
+                                <a class="mr-2 h5" href="{{ url_for('view_adreq', ad_id=ad_post.id) }}" style="margin-right: 1rem;"> {{ ad_post.post.title }}</a>
                                 <small class="text-muted"> {{ ad_post.receiver.username }}</small>
                             </div>
                             <p class="article-content"> {{ ad_post.description }} </p>
@@ -35,9 +35,9 @@
                 {% for page_num in ads_sent.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
                     {% if page_num %}
                         {% if ads_sent.page == page_num %}
-                                <a class="btn btn-dark mb-3" href="{{ url_for('home', page=page_num) }}"> {{ page_num }}</a>
+                                <a class="btn btn-dark mb-3" href="{{ url_for('campaign', senpage=page_num) }}"> {{ page_num }}</a>
                         {% else %}
-                                <a class="btn btn-outline-dark mb-3" href="{{ url_for('home', page=page_num) }}"> {{ page_num }}</a>
+                                <a class="btn btn-outline-dark mb-3" href="{{ url_for('campaign', senpage=page_num) }}"> {{ page_num }}</a>
                         {% endif %}
                     {% else %}
                         ...
@@ -55,7 +55,7 @@
                     <article class="d-flex content-section">
                         <div class="flex-grow-1 ms-3">
                             <div class="article-metadata"> 
-                                <a class="mr-2 h5" href="#" style="margin-right: 1rem;"> {{ ad_post.post.title }}</a>
+                                <a class="mr-2 h5" href="{{ url_for('view_adreq', ad_id=ad_post.id)}}" style="margin-right: 1rem;"> {{ ad_post.post.title }}</a>
                                 <small class="text-muted"> {{ ad_post.receiver.username }}</small>
                             </div>
                             <p class="article-content"> {{ ad_post.description }} </p>
@@ -77,9 +77,9 @@
                 {% for page_num in ads_rec.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
                     {% if page_num %}
                         {% if ads_rec.page == page_num %}
-                                <a class="btn btn-dark mb-3" href="{{ url_for('home', page=page_num) }}"> {{ page_num }}</a>
+                                <a class="btn btn-dark mb-3" href="{{ url_for('campaign', recpage=page_num) }}"> {{ page_num }}</a>
                         {% else %}
-                                <a class="btn btn-outline-dark mb-3" href="{{ url_for('home', page=page_num) }}"> {{ page_num }}</a>
+                                <a class="btn btn-outline-dark mb-3" href="{{ url_for('campaign', recpage=page_num) }}"> {{ page_num }}</a>
                         {% endif %}
                     {% else %}
                         ...

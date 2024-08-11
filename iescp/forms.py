@@ -134,9 +134,3 @@ class CreatorAdRequestForm(FlaskForm):
     budget = IntegerField("Budget (INR)", validators=[DataRequired()])
     completion_date = DateField('Expected completion date', format='%Y-%m-%d', validators=[DataRequired()])
     submit =  SubmitField('Send request')
-    
-class AcceptAdRequestForm(FlaskForm):
-    submit = SubmitField('Accept')
-
-class RejectAdRequestForm(FlaskForm):
-    submit = SubmitField('Reject')

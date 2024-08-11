@@ -2,5 +2,90 @@
 {% block content %}
 
 <h1> List of all ad requests for sponsor </h1>
+<div class="row">
+    <div class="content-section col-md-6">
+        <h2 class="h3"> All Sent Requests</h2>
+        {% if ads_sent.total != 0 %}
+            {% for ad_post in ads_sent %}
+                <article class="d-flex content-section">
+                    <div class="flex-grow-1 ms-3">
+                        <div class="article-metadata"> 
+                            <a class="mr-2 h5" href="{{ url_for('view_adreq', ad_id=ad_post.id) }}" style="margin-right: 1rem;"> {{ ad_post.post.title }}</a>
+                            <small class="text-muted"> {{ ad_post.receiver.username }}</small>
+                        </div>
+                        <p class="article-content"> {{ ad_post.description }} </p>
+                    </div>
+                    <div class="flex-shrink-0 mt-3">
+                        {% if ad_post.status=='pending' %}
+                            <button type="button" class="btn btn-warning" disabled> Pending </button>
+                        {% endif %}
+                        {% if ad_post.status=='accepted' %}
+                            <button type="button" class="btn btn-success" disabled> Accepted </button>
+                        {% endif %}
+                        {% if ad_post.status=='rejected' %}
+                            <button type="button" class="btn btn-danger" disabled> Rejected </button>
+                        {% endif %}
+
+                    </div>
+                </article>
+            {% endfor %}
+            {% for page_num in ads_sent.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                    {% if ads_sent.page == page_num %}
+                            <a class="btn btn-dark mb-3" href="{{ url_for('sponsor_adreq_list', senpage=page_num) }}"> {{ page_num }}</a>
+                    {% else %}
+                            <a class="btn btn-outline-dark mb-3" href="{{ url_for('sponsor_adreq_list', senpage=page_num) }}"> {{ page_num }}</a>
+                    {% endif %}
+                {% else %}
+                    ...
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <h3 class="h4"> You have no ad requests</h3>
+        {% endif %}
+
+    </div>
+    <div class="content-section col-md-6">
+        <h2 class="h3"> All received Requests</h2>
+        {% if ads_rec.total != 0 %}
+            {% for ad_post in ads_rec %}
+                <article class="d-flex content-section">
+                    <div class="flex-grow-1 ms-3">
+                        <div class="article-metadata"> 
+                            <a class="mr-2 h5" href="{{ url_for('view_adreq', ad_id=ad_post.id) }}" style="margin-right: 1rem;"> {{ ad_post.post.title }}</a>
+                            <small class="text-muted"> {{ ad_post.receiver.username }}</small>
+                        </div>
+                        <p class="article-content"> {{ ad_post.description }} </p>
+                    </div>
+                    <div class="flex-shrink-0 mt-3">
+                        {% if ad_post.status=='pending' %}
+                            <button type="button" class="btn btn-warning" disabled> Pending </button>
+                        {% endif %}
+                        {% if ad_post.status=='accepted' %}
+                            <button type="button" class="btn btn-success" disabled> Accepted </button>
+                        {% endif %}
+                        {% if ad_post.status=='rejected' %}
+                            <button type="button" class="btn btn-danger" disabled> Rejected </button>
+                        {% endif %}
+                    </div>
+                </article>
+            {% endfor %}
+
+            {% for page_num in ads_rec.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                    {% if ads_rec.page == page_num %}
+                            <a class="btn btn-dark mb-3" href="{{ url_for('sponsor_adreq_list', recpage=page_num) }}"> {{ page_num }}</a>
+                    {% else %}
+                            <a class="btn btn-outline-dark mb-3" href="{{ url_for('sponsor_adreq_list', recpage=page_num) }}"> {{ page_num }}</a>
+                    {% endif %}
+                {% else %}
+                    ...
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <h3 class="h5"> You have no ad requests</h3>
+        {% endif %}
+    </div>
+</div>
 
 {% endblock content %}
