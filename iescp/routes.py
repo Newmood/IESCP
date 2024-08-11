@@ -1,5 +1,4 @@
 import os
-import requests as rq
 import secrets
 from PIL import Image
 from sqlalchemy import or_
@@ -129,8 +128,8 @@ def sponsor_adreq_list():
      senpage = request.args.get('senpage',default=1,type=int)
      recpage = request.args.get('recpage',default=1,type=int)
      sent_adreq = AdRequest.query.filter_by(sender_id = current_user.id).paginate(page=senpage,per_page=6)
-     all_adreq = AdRequest.query.filter_by(receiver_id = current_user.id).paginate(page=recpage,per_page=6)
-     return render_template("sponsor/sponsor_adreq_list.html",ads_sent=sent_adreq, all_adreq=all_adreq)
+     ads_rec = AdRequest.query.filter_by(receiver_id = current_user.id).paginate(page=recpage,per_page=6)
+     return render_template("sponsor/sponsor_adreq_list.html",ads_sent=sent_adreq, ads_rec=ads_rec)
 
 # CAMPAIGN PAGE ----------------------------
 @app.route("/campaign")
@@ -278,8 +277,9 @@ def browse():
           creators = Creator.query.all()
           return render_template("sponsor/03_browse_creator.html", title= "Browse",creators_list=creators)
      elif current_user.role == "Creator":
-          creator_data = Creator.query.filter_by(common_id=current_user.id).first()
-          return render_template("creator/03_browse_camps.html", title= "Browse", creator_data = creator_data)
+          page = request.args.get('senpage',default=1,type=int)
+          all_camps = Post.query.filter_by(status='Public').order_by(Post.date_posted.desc()).paginate(page=page,per_page=6)
+          return render_template("creator/03_browse_camps.html", title= "Browse", all_camps=all_camps)
      else:
           return redirect(url_for('home'))
           

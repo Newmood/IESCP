@@ -4,6 +4,12 @@
 {% extends "layout.html" %}
 {% block content %}
     <h2 class="h3"> Browse creators </h2>
+    <div class="content-section">
+        <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+        </form>
+    </div>
 
     {% for user in creators_list%}
         <article class="d-flex content-section">

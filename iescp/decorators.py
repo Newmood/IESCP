@@ -22,10 +22,11 @@ def sponsor_required(f):
             return redirect(url_for('home'))
     return decorated_function
 
+# admin registered as sponsor, admin@admin.com
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args,**kwargs):
-        if current_user.is_authenticated and current_user.email=='admin@admin':
+        if current_user.is_authenticated and current_user.email=='admin@admin.com':
             return f(*args,**kwargs)
         else:
             flash("You must be an admin access that page.",'danger')
