@@ -6,9 +6,9 @@
     <div class="mb-3">
         <p class="h4"> Implement search here </p>
         <div class="content-section">
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-primary" type="submit">Search</button>
+            <form method="GET" action="{{ url_for('browse') }}">
+                <input type="text" name="search" placeholder="Search for campaigns..." value="{{ request.args.get('search', '') }}" class="form-control mb-3">
+                <button type="submit" class="btn btn-primary">Search</button>
             </form>
         </div>
     </div>

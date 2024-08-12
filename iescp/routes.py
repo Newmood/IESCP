@@ -273,12 +273,13 @@ def accept_adreq(ad_id,value):
 @app.route("/browse")
 @login_required
 def browse():
+     search_query = request.args.get('search', '')
      if current_user.role == "Sponsor":
-          creators = Creator.query.all()
+          creators = Creator.query.join(Creator.common_user).filter(or_(CommonUser.username.ilike(f'%{search_query}%'),CommonUser.firstname.ilike(f'%{search_query}%'),Creator.category.ilike(f'%{search_query}%'))).all()
           return render_template("sponsor/03_browse_creator.html", title= "Browse",creators_list=creators)
      elif current_user.role == "Creator":
           page = request.args.get('senpage',default=1,type=int)
-          all_camps = Post.query.filter_by(status='Public').order_by(Post.date_posted.desc()).paginate(page=page,per_page=6)
+          all_camps = Post.query.filter_by(status='Public').filter(or_(Post.title.ilike(f'%{search_query}%'),Post.description.ilike(f'%{search_query}%'))).order_by(Post.date_posted.desc()).paginate(page=page,per_page=6)
           return render_template("creator/03_browse_camps.html", title= "Browse", all_camps=all_camps)
      else:
           return redirect(url_for('home'))
