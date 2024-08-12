@@ -25,7 +25,7 @@
                     <th scope="col"> {{creator.common_user.firstname}} {{creator.common_user.lastname}} </th>
                     <th scope="col"> {{creator.common_user.email}} </th>
                     <th scope="col"> {{creator.common_user.flag}} </th>
-                    <th scope="col"> <a href="" class="btn btn-outline-danger btn-sm"> Flag</a> </th>
+                    <th scope="col"> <a href="{{url_for('admin_flag',item='creator',item_id=creator.id)}}" class="btn btn-outline-danger btn-sm"> Flag</a> </th>
 
                 </tr>
             {% endfor%}
@@ -81,7 +81,7 @@
                     <th scope="col"> {{ post.end_date.strftime('%Y-%m-%d') }} </th>
                     <th scope="col"> {{ post.author.common_user.username }} </th>
                     <th scope="col"> {{ post.budget }} </th>
-                    <th scope="col"> <a href="" class="btn btn-outline-danger btn-sm"> Flag</a> </th>
+                    <th scope="col"> <a href="{{url_for('admin_flag',item='campaign',item_id=post.id)}}" class="btn btn-outline-danger btn-sm"> Flag</a> </th>
 
                 </tr>
             {% endfor%}

@@ -375,7 +375,7 @@ def admin_lists(item):
           campaign_data = Post.query.all()
           return render_template('admin/admin_list.html',item=item, campaign_data=campaign_data)
      elif item=='flagged':
-          users = CommonUser.query.filter_by(flag='yes').all()
+          users = CommonUser.query.filter_by(flag='Yes').all()
           return render_template('admin/admin_list.html',item=item, users=users)
      return render_template('admin/admin_list.html',item=item)
 
@@ -407,4 +407,23 @@ def admin_flag(item, item_id):
 @app.route("/admin-stats")
 @admin_required
 def admin_stats():
-     return render_template('admin/admin_analytics.html')
+     # first part
+     total_users = CommonUser.query.count()
+     total_posts = Post.query.count()
+     total_adreq = AdRequest.query.count()
+     total_flagged = CommonUser.query.filter_by(flag='Yes').count()
+
+     # for first piechart
+     spon_count = CommonUser.query.filter_by(role='Sponsor').count() - 1 #admin is a sponsor
+     creat_count = CommonUser.query.filter_by(role='Creator').count()
+     adm_count = 1
+
+     # 2nd pie
+     pending_count = AdRequest.query.filter_by(status='pending').count()
+     accepted_count = AdRequest.query.filter_by(status='accepted').count()
+     rejected_count = AdRequest.query.filter_by(status='rejected').count()
+
+     return render_template('admin/admin_analytics.html', 
+                            total_users=total_users, total_posts=total_posts, total_adreq=total_adreq, total_flagged=total_flagged,
+                            spon_count=spon_count, creat_count=creat_count, adm_count=adm_count,
+                            pending_count=pending_count, accepted_count=accepted_count, rejected_count=rejected_count)

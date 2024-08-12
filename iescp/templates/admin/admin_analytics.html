@@ -2,4 +2,120 @@
 {% block content2 %}
 
 
+<div class="row mb-4 ">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+              <p>Total Users</p>
+              <p class="h3"> {{ total_users }} </p>
+            </div>
+          </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <p>Total Campaign posts</p>
+                <p class="h3"> {{ total_posts }} </p>
+            </div>
+          </div>
+    </div><div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <p>Total Ad requests</p>
+                <p class="h3"> {{ total_adreq }} </p>
+            </div>
+          </div>
+    </div><div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <p>Flagged Users</p>
+                <p class="h3"> {{ total_flagged }} </p>
+            </div>
+          </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <canvas id="userrolePie"> </canvas>
+    </div>
+    <div class="col-md-6">
+        <canvas id="adreqStatusPie"> </canvas>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() { 
+        // first
+        const ctx1 = document.getElementById('userrolePie').getContext('2d');
+        const userrolePieChart = new Chart(ctx1, {
+            type: 'pie',
+            data: {
+                labels: ['Sponsors', 'Creators', 'Admins'],
+                datasets: [{
+                    label: 'Role',
+                    data: [{{ spon_count |safe }}, {{ creat_count|safe }}, {{ adm_count|safe }}],  // Data from Flask route
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'User Distribution by Role',
+                        padding: {
+                            top: 10,
+                            bottom: 10
+                        },
+                        font: {
+                            size: 28,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        });
+
+        // dusra
+        const ctx2 = document.getElementById('adreqStatusPie').getContext('2d');
+        const adreqPie = new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: ['Pending', 'Accepted', 'Rejected'],
+                datasets: [{
+                    label: 'Status',
+                    data: [{{ pending_count |safe }}, {{ accepted_count|safe }}, {{ rejected_count|safe }}],  // Data from Flask route
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Ad-request Distribution by Status',
+                        padding: {
+                            top: 10,
+                            bottom: 10
+                        },
+                        font: {
+                            size: 28,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        });
+
+    });
+</script>
+    
+
 {% endblock content2 %}
