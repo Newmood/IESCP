@@ -66,7 +66,7 @@ class Post(db.Model):
      user_id = db.Column(db.Integer,db.ForeignKey('sponsor.id'),nullable= False)
      status = db.Column(db.String(20), nullable=False, default='Public')
      author = db.relationship('Sponsor', backref='posts', lazy=True)
-     # flag = db.Column(db.String(5), nullable=False, default='No') # flag for admin
+     flag = db.Column(db.String(5), nullable=False, default='No') # flag for admin
 
      def __repr__(self):
           return f"User('{self.title}','{self.date_posted}')"

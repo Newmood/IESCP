@@ -90,7 +90,7 @@ def logout():
 @login_required
 def home():
      page = request.args.get('page',default=1,type=int)
-     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=6)
+     posts = Post.query.filter_by(status="Public").order_by(Post.date_posted.desc()).paginate(page=page, per_page=6)
      return render_template('index.html', title="Home" ,ads_posts= posts)
 
 @app.route("/user/sponsor/<string:username>")
@@ -157,7 +157,7 @@ def create_campaign():
      new_camp = NewCampaign()
      if new_camp.validate_on_submit():
           sponsor = Sponsor.query.filter_by(common_id=current_user.id).first()
-          post = Post(title= new_camp.title.data, description =new_camp.description.data, budget=new_camp.budget.data, industry=new_camp.industry.data, end_date= new_camp.end_date.data, user_id = sponsor.id, date_posted= new_camp.date_posted.data)
+          post = Post(title= new_camp.title.data, description =new_camp.description.data, budget=new_camp.budget.data, industry=new_camp.industry.data, end_date= new_camp.end_date.data, user_id = sponsor.id, date_posted= new_camp.date_posted.data, status=new_camp.status.data)
           db.session.add(post)
           db.session.commit()
           flash('New campaign has been created','success')
