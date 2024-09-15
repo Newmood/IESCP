@@ -4,10 +4,11 @@ from PIL import Image
 from sqlalchemy import or_
 from flask import render_template, url_for, flash, redirect, request, abort
 from flask_login import login_user, current_user, logout_user, login_required
+from flask_mail import Message
 from iescp.forms import *
 from iescp.models import *
 from iescp.decorators import creator_required, sponsor_required, admin_required
-from iescp import app, db, bcrypt
+from iescp import app, db, bcrypt, mail
 
 
 def save_pic(form_pic_data):
@@ -21,6 +22,16 @@ def save_pic(form_pic_data):
      img.save(pic_path)
 
      return pic_fn
+
+
+def send_reset_email(user):
+     token = user.get_reset_token()
+     msg = Message('Password Reset Request', sender='noreply@demo.com', recipients=[user.email])
+     msg.body = f'''To reset your password, visit the following link:
+{url_for('reset_password', token=token, _external=True)}
+If you did not make this request then simply ignore this email and your password will stay the same.
+'''
+     mail.send(msg)
 
 @app.route("/")
 def landing():
@@ -86,6 +97,43 @@ def logout():
      logout_user()
      return redirect(url_for('landing'))
 
+
+@app.route("/reset_pwd_request", methods=['GET','POST'])
+def reset_password_request():
+     if current_user.is_authenticated:
+          return redirect(url_for('home'))
+     form = ResetPasswordRequestForm()
+     if form.validate_on_submit():
+          user = CommonUser.query.filter_by(email=form.email.data).first()
+          if user:
+               send_reset_email(user)
+               token = user.get_reset_token()
+               flash('Password reset email sent. Please check your email.','info')
+               return redirect(url_for('reset_password', token=token))
+          else:
+               flash('No account found with that email. Please register first.','danger')
+     return render_template('reset_pwd_request.html', title="Reset Password", form=form)
+
+
+@app.route("/reset_pwd/<token>", methods=['GET','POST'])
+def reset_password(token):
+     if current_user.is_authenticated:
+          return redirect(url_for('home'))
+     user = CommonUser.verify_reset_token(token)
+     if user is None:
+          flash('That is an invalid or expired token','warning')
+          return redirect(url_for('reset_password_request'))
+     form = ResetPasswordForm()
+     if form.validate_on_submit():
+          hashed_pwd = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+          user.password = hashed_pwd
+          db.session.commit()
+          flash('Your password has been updated. Please login.','success')
+          return redirect(url_for('login'))
+     return render_template('reset_pwd.html', title="Reset Password", form=form)
+     
+
+# POST LOGIN ==============================
 @app.route("/home")
 @login_required
 def home():

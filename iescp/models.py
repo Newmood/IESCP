@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
-from iescp import db, login_manager
+from itsdangerous import URLSafeTimedSerializer as Serializer
+from iescp import db, login_manager, app
 from flask_login import UserMixin
 
 @login_manager.user_loader
@@ -20,6 +21,19 @@ class CommonUser(db.Model,UserMixin):
      flag = db.Column(db.String(5), nullable=False, default='No') # flag for admin
      phone_no = db.Column(db.String(16), nullable = False)
      
+     def get_reset_token(self):
+          s = Serializer(app.config['SECRET_KEY'])
+          return s.dumps({'user_id': self.id}).decode('utf-8')
+
+     @staticmethod
+     def verify_reset_token(token, expires_sec=1800):
+          s = Serializer(app.config['SECRET_KEY'])
+          try:
+               user_id = s.loads(token, max_age = expires_sec)['user_id']
+               return CommonUser.query.get(user_id)
+          except:
+               return None
+
 
      def __repr__(self):
           return f"User('{self.id}','{self.role}','{self.status}')"

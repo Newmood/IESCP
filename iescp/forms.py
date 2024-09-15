@@ -134,3 +134,17 @@ class CreatorAdRequestForm(FlaskForm):
     budget = IntegerField("Budget (INR)", validators=[DataRequired()])
     completion_date = DateField('Expected completion date', format='%Y-%m-%d', validators=[DataRequired()])
     submit =  SubmitField('Send request')
+
+class ResetPasswordRequestForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Request Password Reset')
+
+    def validate_email(self,email):
+        user = CommonUser.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError('Account not found. Ensure credentials/register first.')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Reset Password')

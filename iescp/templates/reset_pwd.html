@@ -1,0 +1,52 @@
+{% extends "prelayout.html" %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}" >
+
+{%endblock head %}
+
+{% block content %}
+    <img src="{{ url_for('static', filename = 'images/landing-2.jpeg') }}" class="landing-img">
+
+    <div class="login-box">
+        <form method="POST" action="{{ url_for('login') }}">
+            {{ form.hidden_tag() }}
+            <h1 class="h3 mb-3 fw-normal">Login</h1>
+            <hr>
+            <div class="form-group">
+                {{ form.password.label(class="form-control-label") }}
+                {% if form.password.errors %}
+                        {{ form.password(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.password(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.confirm_password.label(class="form-control-label pt-2") }}
+                {% if form.confirm_password.errors %}
+                    {{ form.confirm_password(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.confirm_password.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.confirm_password(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+
+            <br>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-dark  py-2") }}
+            </div>
+
+        </form>
+
+        <hr>
+    </div>
+
+{% endblock content%}
